@@ -1,5 +1,5 @@
-# Photomark
-照片添加徕卡相框（索尼、尼康、佳能、一加。。。。。。。）工具，[GitHub pages在线使用](https://codeniuma.github.io/Photomark/)
+# Leica-Watermark
+照片添加徕卡相框工具，[GitHub pages在线使用](https://codeniuma.github.io/Photomark/)
 
 ## Features
 * 各品牌logo & 多种字体
@@ -17,7 +17,7 @@
 
 ## Version
 ### 25.01.13
-1.修复了手动编辑信息后照片无法更改的问题
-2.修复了原有的未知机型弹窗
-3.添加了Canon的logo
+1. 修复了手动编辑信息后照片无法更改的问题  
+2. 修复了原有的未知机型弹窗  
+3. 添加了Canon的logo  
 
