@@ -6,6 +6,7 @@
     "logo_type": "图标类型",
     "hasselbled": "哈苏",
     "leica": "徕卡",
+    "sony": "索尼",
     "nikon": "尼康",
     "oneplus": "一加",
     "xiaomi": "小米",
@@ -13,7 +14,7 @@
     "fonts": "字体",
     "image_scale": "图片缩放",
     "original_size": "原始尺寸",
-    "export_quality": "导出质量",
+    "export_quality": "导出质量(25%~100%)",
     "device_name": "设备名称",
     "time": "时间",
     "lens_info": "镜头信息",
@@ -43,6 +44,10 @@
     "cannot_get_model_list": "无法获取机型列表",
     "model_not_found": "未找到对应机型",
     "cannot_match_unknown_model": "无法匹配未知机型",
-    "this_image_cannot_be_saved_in_safari": "此图像无法通过 Safari 保存",
-    "changing_font_please_wait": "正在更换字体，请稍候……"
+    "this_image_cannot_be_saved_in_safari": "此图片在 Safari 中无法保存",
+    "changing_font_please_wait": "正在更换字体，请稍候...",
+    "no_location_info": "照片无位置信息",
+    "location_is_iceland": "位置请求失败，当前位置为冰岛",
+    "getting_location_success": "获取位置成功",
+    "yuantu": "原图"
 }

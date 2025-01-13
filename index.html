@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp">
-    <title>Photomark</title>
+    <title>WaterMark</title>
     <link href="https://cdn.staticfile.org/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
     <link href="./photomark.css" rel="stylesheet">
     <script src="https://cdn.staticfile.org/mdui/1.0.2/js/mdui.min.js"></script>
@@ -55,13 +55,13 @@
     <div class="mdui-container">
         <div id="main-flex" class="mdui-row-xs-1 mdui-row-sm-2">
             <div id="photo-col" class="mdui-col">
-
-                <br />
+                <!-- 照片上传前的容器 -->
                 <div id="photo-area" class="mdui-color-grey-200 mdui-ripple mdui-img-rounded mdui-valign"
                     style="height: 256px; background-size: contain; background-repeat: no-repeat; background-position: center;"
                     onclick="chooseFile()">
                     <div class="mdui-center" style="text-align: center;">
                         <div id="photo-tip">
+                            <i class="mdui-icon material-icons" style="font-size: 64px; opacity: .5;">camera_alt</i>
                             <h1>
                                 <script>document.write(getI18n('drag_your_photo_to_here'))</script>
                             </h1>
@@ -72,7 +72,8 @@
                         <p id="photo-info" class="mdui-hidden">Unknown</p>
                     </div>
                 </div>
-                <div id="photo-container">
+                <!-- 照片上传后的容器 -->
+                <div id="photo-container" class="mdui-hidden">
                     <div id="photo-canvas-div" class="mdui-ripple mdui-hidden" style="padding: 4px;">
                         <canvas id="photo-canvas" class="mdui-hidden"></canvas>
                         <img id="photo-preview" class="mdui-img-rounded mdui-shadow-3" onclick="chooseFile()">
@@ -89,6 +90,9 @@
                             <select id="logo-select" class="mdui-select mdui-textfield-input">
                                 <option value="none">
                                     <script>document.write(getI18n('none'))</script>
+                                </option>
+                                <option value="sony">
+                                    <script>document.write(getI18n('sony'))</script>
                                 </option>
                                 <option value="hasselblad">
                                     <script>document.write(getI18n('hasselbled'))</script>
@@ -132,9 +136,13 @@
                                 <script>document.write(getI18n('image_scale'))</script>
                             </label>
                             <select id="zoom-select" class="mdui-select mdui-textfield-input">
-                                <option value="1">
+                                <option value="0.5">0.5x</option>
+                                <option value="0.75">0.75x</option>
+                                <option value="1" selected>
                                     <script>document.write(getI18n('original_size'))</script>
                                 </option>
+                                <option value="1.25">1.25x</option>
+                                <option value="1.5">1.5x</option>
                                 <option value="2">2x</option>
                             </select>
                         </div>
@@ -144,10 +152,14 @@
                             <label class="mdui-textfield-label">
                                 <script>document.write(getI18n('export_quality'))</script>
                             </label>
-                            <select id="quality-select" class="mdui-select mdui-textfield-input">
-                                <option value="100">100%</option>
-                                <option value="80">80%</option>
-                            </select>
+                            <div style="display: flex; align-items: center;">
+                                <div class="mdui-slider" id="quality-slider" style="flex: 1; margin-right: 10px;">
+                                    <input type="range" min="25" max="100" value="100" step="1" />
+                                </div>
+                                <div id="quality-value" style="min-width: 40px; text-align: right;">
+                                    <script>document.write(getI18n('yuantu'))</script>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -156,25 +168,25 @@
                         <script>document.write(getI18n('device_name'))</script>
                     </label>
                     <input id="device-input" class="mdui-textfield-input" type="text" onclick="showModelEditor()"
-                        readonly />
+                        disabled />
                 </div>
                 <div class="mdui-textfield mdui-textfield-floating-label">
                     <label class="mdui-textfield-label">
                         <script>document.write(getI18n('time'))</script>
                     </label>
-                    <input id="time-input" class="mdui-textfield-input" type="text" readonly />
+                    <input id="time-input" class="mdui-textfield-input" type="text" disabled />
                 </div>
                 <div class="mdui-textfield mdui-textfield-floating-label">
                     <label class="mdui-textfield-label">
                         <script>document.write(getI18n('lens_info'))</script>
                     </label>
-                    <input id="lens-input" class="mdui-textfield-input" type="text" readonly />
+                    <input id="lens-input" class="mdui-textfield-input" type="text" disabled />
                 </div>
                 <div class="mdui-textfield mdui-textfield-floating-label">
                     <label class="mdui-textfield-label">
                         <script>document.write(getI18n('location'))</script>
                     </label>
-                    <input id="location-input" class="mdui-textfield-input" type="text" readonly />
+                    <input id="location-input" class="mdui-textfield-input" type="text" disabled />
                 </div>
                 <div class="mdui-typo">
                     <a onclick="getLocation()" style="cursor: pointer;">
@@ -199,14 +211,23 @@
                     <p style="margin: 0;">
                         <script>document.write(getI18n('not_for_commercial_use'))</script>
                     </p>
-                    <p style="margin: 0;">© LTDSA 2022-2024 | <a onclick="getContributors()" style="cursor: pointer;">
+                    <p style="margin: 0;">😆Made by yuange |
+                        <!-- <a onclick="getContributors()" style="cursor: pointer;">
                             <script>document.write(getI18n('contributors'))</script>
-                        </a> | <a onclick="getFAQ()" style="cursor: pointer;">
+                        </a> |  -->
+                        <a onclick="getFAQ()" style="cursor: pointer;">
                             <script>document.write(getI18n('faq'))</script>
+                        </a> | <a href="https://profile.yuange.us.kg" target="_blank" style="cursor: pointer;">
+                            Home
                         </a>
                     </p>
                 </div>
                 <br />
+                <div class="mdui-float-right">
+                    <button id="theme-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
+                        <i class="mdui-icon material-icons">brightness_4</i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -256,25 +277,155 @@
         }
 
         function chooseFile() {
+            // 创建一个 input 元素，用于选择文件
             var fileInput = document.createElement('input');
+            // 设置 input 元素的类型为 file
             fileInput.type = 'file';
+            // 设置 input 元素接受的文件类型为 image
             fileInput.accept = 'image/*';
+            // 模拟点击 input 元素，弹出文件选择框
             fileInput.click();
+            // 禁用设备名称输入框
+            $('#device-input').prop('disabled', true);
+            // 禁用时间输入框
+            $('#time-input').prop('disabled', true);
+            // 禁用镜头信息输入框
+            $('#lens-input').prop('disabled', true);
+            // 禁用位置信息输入框
+            $('#location-input').prop('disabled', true);
 
+            // 当文件选择发生变化时
             fileInput.onchange = (e) => {
-                console.log(e);
+                console.log("fileInput.onchange", e);
+                // 判断是否是 Safari 浏览器
                 if (navigator.userAgent.indexOf('Safari/') > -1) {
+                    // 如果是 Safari 浏览器，则读取选择的文件
                     readImage(e.target.files[0]);
                 } else {
+                    // 如果不是 Safari 浏览器，则读取选择的文件
                     readImage(e.path[0].files[0]);
                 }
             }
         }
 
+        function readImage(file) {
+            // 将选择的文件赋值给 photoFile 变量
+            photoFile = file;
+            console.log("photoFile", photoFile);
+            // 判断选择的文件是否为图片类型
+            if (photoFile.type.indexOf('image') == -1) {
+                // 如果不是图片类型，弹出提示
+                mdui.snackbar({
+                    message: getI18n('please_select_a_image_file'),
+                    position: 'right-top'
+                });
+                return;
+            }
+
+            // 隐藏照片提示信息
+            $('#photo-tip').addClass('mdui-hidden');
+            // 显示加载中提示
+            $('#photo-info').text(getI18n('loading'));
+            $('#photo-info').removeClass('mdui-hidden');
+
+            // 创建 FileReader 对象用于读取文件
+            var reader = new FileReader();
+            // 文件读取完成后执行
+            reader.onload = (e) => {
+                console.log("reader.onload", e);
+                // 创建 Image 对象用于获取图片信息
+                var photoImage = new Image();
+                photoImage.src = e.target.result;
+                // 图片加载完成后执行
+                photoImage.onload = () => {
+                    // 显示图片文件名和宽高信息
+                    $('#photo-info').html(`${photoFile.name}<br />${photoImage.width}x${photoImage.height}`);
+
+                    // 初始化设备、时间、镜头和位置信息为 Unknown
+                    $('#device-input').val('Unknown');
+                    $('#time-input').val('Unknown');
+                    $('#lens-input').val('Unknown');
+                    $('#location-input').val('Unknown');
+
+                    // 使用 exifr 解析图片 EXIF 信息
+                    exifr.parse(e.target.result).then(res => {
+                        console.log(res);
+                        // 将 EXIF 信息保存到 photoExif 变量
+                        photoExif = res;
+                        // 如果 EXIF 中有 Model 信息，则显示设备型号
+                        if (res.Model) $('#device-input').val(res.Model);
+                        // 如果是小米手机，则显示设备型号
+                        if (res['39424'] && typeof res['39424'] == 'string') $('#device-input').val(res['39424']); // Xiaomi
+                        // 如果 EXIF 中有 CreateDate 信息，则显示拍摄时间
+                        if (res.CreateDate) $('#time-input').val(new Date(res.CreateDate).format('yyyy.MM.dd hh:mm:ss'));
+
+                        // 如果 EXIF 中有焦距信息，则显示镜头焦距
+                        if (res.FocalLength) $('#lens-input').val(`${parseInt(res.FocalLength)}mm`);
+                        if (res.FocalLengthIn35mmFormat) $('#lens-input').val(`${parseInt(res.FocalLengthIn35mmFormat)}mm`);
+                        // 如果 EXIF 中有光圈信息，则显示镜头光圈
+                        if (res.FNumber) $('#lens-input').val(`${$('#lens-input').val()} f/${res.FNumber.toFixed(1)}`);
+                        // 如果 EXIF 中有曝光时间信息，则显示镜头曝光时间
+                        if (res.ExposureTime) $('#lens-input').val(`${$('#lens-input').val()} 1/${parseInt(res.ExposureTime ** -1)}`);
+                        // 如果 EXIF 中有 ISO 信息，则显示镜头 ISO
+                        if (res.ISO) $('#lens-input').val(`${$('#lens-input').val()} ISO${res.ISO}`);
+                        //if (res.FocalLength && res.FNumber && res.ExposureTime && res.ISO) $('#lens-input').val(`${parseInt(res.FocalLength)}mm f/${res.FNumber.toFixed(1)} 1/${parseInt(res.ExposureTime ** -1)} ISO${res.ISO}`);
+                        // 如果 EXIF 中有 GPS 信息，则显示拍摄位置
+                        if (res.GPSLatitude && res.GPSLatitudeRef && res.GPSLongitude && res.GPSLongitudeRef) {
+                            let latitude = res.GPSLatitude[0] + res.GPSLatitude[1] / 60 + res.GPSLatitude[2] / 3600;
+                            let longitude = res.GPSLongitude[0] + res.GPSLongitude[1] / 60 + res.GPSLongitude[2] / 3600;
+                            let latitudeDirection = res.GPSLatitudeRef === 'N' ? 'N' : 'S';
+                            let longitudeDirection = res.GPSLongitudeRef === 'E' ? 'E' : 'W';
+                            $('#location-input').val(`${latitude.toFixed(4)}°${latitudeDirection} ${longitude.toFixed(4)}°${longitudeDirection}`);
+                        } else {
+                            // 如果没有 GPS 信息，则显示无位置信息
+                            $('#location-input').val(getI18n('no_location_info'));
+                        }
+
+                        mdui.mutation();
+
+                        // 启用设备、时间、镜头和位置输入框
+                        $('#device-input').prop('disabled', false);
+                        $('#time-input').prop('disabled', false);
+                        $('#lens-input').prop('disabled', false);
+                        $('#location-input').prop('disabled', false);
+
+                        
+
+                        // 为输入框添加 mdui-textfield-not-empty 类，使其显示 label
+                        $('#device-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
+                        $('#time-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
+                        $('#lens-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
+                        $('#location-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
+                    });
+                    // 隐藏照片选择区域，显示 canvas 区域
+                    console.log("drawImage(true)");
+                    // 绘制图片到 canvas
+                    drawImage(true);
+
+                    // 如果是移动端 Safari 浏览器，且图片大小超过 5MB，则提示无法保存
+                    if (navigator.userAgent.indexOf('Mobile') > -1 && navigator.userAgent.indexOf('Safari/') > -1 && photoFile.size > 1024 ** 2 * 5) {
+                        mdui.snackbar({
+                            message: getI18n('this_image_cannot_be_saved_in_safari'),
+                            position: 'right-top'
+                        });
+                    }
+                }
+            }
+
+            // 读取文件为 DataURL
+            reader.readAsDataURL(photoFile);
+
+            // 启用保存和预览按钮
+            document.querySelector('#save-btn').disabled = false;
+            document.querySelector('#preview-btn').disabled = false;
+            // 设置保存按钮文字为保存
+            $('#save-btn').text(getI18n('save'));
+        }
+
         function previewImage() {
             $.showOverlay();
             var imageHeight;
-            var exportQuality = Number($('#quality-select').val()) / 100;
+            var exportQuality = (Number($('#quality-slider input').val()) - 1) / 100;
             photoCanvas.toBlob(canvasBlob => {
                 imageHeight = `${document.body.clientWidth * .85 / photoCanvas.width * photoCanvas.height}px`;
                 $.hideOverlay();
@@ -299,7 +450,7 @@
         function saveImage() {
             $('#save-btn').text(getI18n('saving'));
             document.querySelector('#save-btn').disabled = true;
-            var exportQuality = Number($('#quality-select').val()) / 100;
+            var exportQuality = Number($('#quality-slider input').val()) / 100;
             photoCanvas.toBlob(canvasBlob => {
                 var imageLink = document.createElement('a');
                 imageLink.download = `photomark_${new Date().format('yyyyMMddhhmmss')}.jpg`;
@@ -307,23 +458,37 @@
                 imageLink.click();
                 $('#save-btn').text(getI18n('save'));
                 document.querySelector('#save-btn').disabled = false;
-            }, 'image/jpg', exportQuality);
+            }, 'image/jpeg', exportQuality);
         }
 
         function getLocation() {
+            mdui.snackbar({
+                message: getI18n('getting_location'),
+                position: 'right-top',
+                timeout: 1000
+            });
             if (navigator.geolocation) {
-                mdui.snackbar({
-                    message: getI18n('getting_location'),
-                    position: 'right-top'
-                });
-                navigator.geolocation.getCurrentPosition(e => {
-                    console.log(e);
-                    const coords = e.coords || {};
-                    const { latitude, longitude } = coords;
-                    console.log(latitude, longitude);
-                    $('#location-input').val(`${changeToDFM(latitude)}N ${changeToDFM(longitude)}E`);
+                navigator.geolocation.getCurrentPosition(position => {
+                    mdui.snackbar({
+                        message: getI18n('getting_location_success'),
+                        position: 'right-top',
+                        timeout: 1000
+                    });
+                    let latitude = position.coords.latitude;
+                    let longitude = position.coords.longitude;
+                    let latitudeDirection = latitude >= 0 ? 'N' : 'S';
+                    let longitudeDirection = longitude >= 0 ? 'E' : 'W';
+                    $('#location-input').val(`${Math.abs(latitude)}°${latitudeDirection} ${Math.abs(longitude)}°${longitudeDirection}`);
+                    $('#location-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
                     drawImage(true);
                 }, () => {
+                    $('#location-input').val('64.9631°N -19.0208°W');
+                    $('#location-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
+                    mdui.snackbar({
+                        message: getI18n('location_is_iceland'),
+                        position: 'right-top'
+                    });
+                    drawImage(true);
                     mdui.snackbar({
                         message: getI18n('cant_get_your_location'),
                         position: 'right-top'
@@ -373,161 +538,183 @@
         }
 
         function drawImage(preview) {
+            // 如果 preview 未定义，则设置为 false
             if (typeof preview == 'undefined') preview = false;
+            // 创建 FileReader 对象
             var reader = new FileReader();
+            // 当 FileReader 读取文件完成时
             reader.onload = (e) => {
+                // 创建 Image 对象
                 var photoImage = new Image();
+                // 设置 Image 对象的 src 属性为读取的文件内容
                 photoImage.src = e.target.result;
+                // 当 Image 对象加载完成时
                 photoImage.onload = () => {
+                    // 获取图片宽度
                     var photoWidth = photoImage.width;
+                    // 获取图片高度
                     var photoHeight = photoImage.height;
 
-                    if (parseInt($('#zoom-select').val()) == 2) {
-                        photoWidth = photoWidth * 2;
-                        photoHeight = photoHeight * 2;
+                    // 如果缩放选择为 2，则将图片宽高都乘以 2
+                    var zoom = parseInt($('#zoom-select').val());
+                    if (zoom != 1) {
+                        photoWidth = photoWidth * zoom;
+                        photoHeight = photoHeight * zoom;
                     }
 
+                    // 设置 canvas 宽度
                     photoCanvas.width = photoWidth;
+                    // 设置 canvas 高度，增加 614 用于显示文字信息
                     photoCanvas.height = photoHeight + 614;
 
+                    // 设置 canvas 背景色为白色
                     photoCtx.fillStyle = 'white';
+                    // 填充 canvas 背景
                     photoCtx.fillRect(0, 0, photoCanvas.width, photoCanvas.height);
+                    // 将图片绘制到 canvas 上
                     photoCtx.drawImage(photoImage, 0, 0, photoWidth, photoHeight);
 
+                    // 设置字体样式
                     photoCtx.font = `bold 120px ${fontList[parseInt($('#font-select').val())]}`;
+                    // 设置字体颜色为黑色
                     photoCtx.fillStyle = 'black';
 
+                    // 获取镜头信息文本的宽度
                     var specLength = photoCtx.measureText($('#lens-input').val()).width;
 
+                    // 在 canvas 上绘制相机名称信息，200是左边距
                     photoCtx.fillText($('#device-input').val(), 200, photoHeight + 282);
-                    //photoCtx.fillText($('#lens-input').val(), photoImage.width - 1820, photoImage.height + 282);
+                    // 在 canvas 上绘制镜头信息，200是右边距
                     photoCtx.fillText($('#lens-input').val(), photoWidth - specLength - 200, photoHeight + 282);
 
 
+                    // 设置字体样式
                     photoCtx.font = `normal 82px ${fontList[parseInt($('#font-select').val())]}`;
+                    // 设置 canvas 字符间距
                     photoCanvas.style.letterSpacing = '1px';
+                    // 设置字体颜色
                     photoCtx.fillStyle = '#727272';
+                    // 在 canvas 上绘制时间信息
                     photoCtx.fillText($('#time-input').val(), 200, photoHeight + 434);
+                    // 在 canvas 上绘制位置信息
                     photoCtx.fillText($('#location-input').val(), photoWidth - specLength - 200, photoHeight + 434);
 
+                    // 如果选择了 logo
                     if ($('#logo-select').val() != 'none') {
+                        // 创建 logo Image 对象
                         var logoImage = new Image();
+                        // 设置 logo Image 对象的 src 属性
                         logoImage.src = logoList[$('#logo-select').val()];
 
+                        // 当 logo Image 对象加载完成时
                         logoImage.onload = () => {
-                            photoCtx.drawImage(logoImage, photoWidth - specLength - 600, photoHeight + 190, 250, 250);
+                            var logoHeight = 250;
+                            var pianyi = 30;
+                            if ($('#logo-select').val() == 'sony') {
+                                pianyi = 200;
+                            }
+                            // 将 logo 绘制到 canvas 上
+                            photoCtx.drawImage(logoImage, photoWidth - specLength - 600 - pianyi, photoHeight + 180 - (pianyi/2), logoHeight+pianyi, logoHeight+pianyi);
 
+                            // 绘制 logo 分割线
                             photoCtx.moveTo(photoWidth - specLength - 280, photoHeight + 190);
-                            photoCtx.lineTo(photoWidth - specLength - 280, photoHeight + 440);
+                            photoCtx.lineTo(photoWidth - specLength - 280, photoHeight + 190 + logoHeight);
                             photoCtx.lineWidth = 10;
                             photoCtx.strokeStyle = '#cccccc';
                             photoCtx.stroke();
-
+                            
+                            // 如果是预览模式
                             if (preview) {
-                                //previewImage();
-                                var exportQuality = Number($('#quality-select').val()) / 100;
+                                // 获取图片质量
+                                var exportQuality = Number($('#quality-slider input').val()) / 100;
+                                // 将 canvas 转换为 blob 对象
                                 photoCanvas.toBlob(canvasBlob => {
+                                    // 设置 #photo-canvas-div 的样式
+                                    $('#photo-canvas-div').css({
+                                        'display': 'flex',
+                                        'justify-content': 'center',
+                                        'align-items': 'center'
+                                    });
+
                                     if (photoCanvas.height > photoCanvas.width) {
-                                        $('#photo-preview').attr('width', '60%');
-                                        $('#photo-preview').attr('height', '100%');
+                                        $('#photo-canvas-div').css({
+                                            'width': 'auto',
+                                            'height': '700px'
+                                        });
+
+                                        $('#photo-preview').attr('width', 'auto'); // 图片宽度占满容器
+                                        $('#photo-preview').attr('height', '100%'); // 图片高度自动调整
                                     } else {
-                                        $('#photo-preview').attr('width', '100%');
-                                        $('#photo-preview').attr('height', '60%');
+                                        $('#photo-canvas-div').css({
+                                            'width': '800px',
+                                            'height': 'auto'
+                                        });
+                                        $('#photo-preview').attr('width', '800px'); // 图片宽度自动调整
+                                        $('#photo-preview').attr('height', 'auto'); // 图片高度占满容器
                                     }
+
+                                    // 设置预览图的 src 属性
                                     $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob));
+                                    $('#photo-area').addClass('mdui-hidden');
+                                    $('#photo-container').removeClass('mdui-hidden');
+                                    $('#photo-canvas-div').removeClass('mdui-hidden');
                                 }, 'image/jpg', exportQuality);
                             } else {
+                                // 保存图片
                                 saveImage();
                             }
                         }
                     } else {
+                        // 如果没有选择 logo
                         if (preview) {
-                            //previewImage();
-                            var exportQuality = Number($('#quality-select').val()) / 100;
+                            // 获取图片质量
+                            var exportQuality = Number($('#quality-slider input').val()) / 100;
+                            // 将 canvas 转换为 blob 对象
                             photoCanvas.toBlob(canvasBlob => {
+
+                                // 设置 #photo-canvas-div 的样式
+                                $('#photo-canvas-div').css({
+                                    'display': 'flex',
+                                    'justify-content': 'center',
+                                    'align-items': 'center'
+                                });
+
                                 if (photoCanvas.height > photoCanvas.width) {
-                                    $('#photo-preview').attr('width', '60%');
-                                    $('#photo-preview').attr('height', '100%');
+                                    $('#photo-canvas-div').css({
+                                        'width': 'auto',
+                                        'height': '700px'
+                                    });
+                                    
+                                    $('#photo-preview').attr('width', 'auto'); // 图片宽度占满容器
+                                    $('#photo-preview').attr('height', '100%'); // 图片高度自动调整
                                 } else {
-                                    $('#photo-preview').attr('width', '100%');
-                                    $('#photo-preview').attr('height', '60%');
+                                    $('#photo-canvas-div').css({
+                                        'width': '800px',
+                                        'height': 'auto'
+                                    });
+                                    $('#photo-preview').attr('width', '800px'); // 图片宽度自动调整
+                                    $('#photo-preview').attr('height', 'auto'); // 图片高度占满容器
                                 }
+
+                                // 设置预览图的 src 属性
                                 $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob));
+                                $('#photo-area').addClass('mdui-hidden');
+                                $('#photo-container').removeClass('mdui-hidden');
+                                $('#photo-canvas-div').removeClass('mdui-hidden');
                             }, 'image/jpg', exportQuality);
                         } else {
+                            // 保存图片
                             saveImage();
                         }
                     }
                 }
             };
 
+            // 读取图片文件
             reader.readAsDataURL(photoFile);
         }
 
-        function readImage(file) {
-            photoFile = file;
-            console.log(photoFile);
-            if (photoFile.type.indexOf('image') == -1) {
-                mdui.snackbar({
-                    message: getI18n('please_select_a_image_file'),
-                    position: 'right-top'
-                });
-                return;
-            }
 
-            $('#photo-tip').addClass('mdui-hidden');
-            $('#photo-info').text(getI18n('loading'));
-            $('#photo-info').removeClass('mdui-hidden');
-
-            var reader = new FileReader();
-            reader.onload = (e) => {
-                var photoImage = new Image();
-                photoImage.src = e.target.result;
-                photoImage.onload = () => {
-                    $('#photo-info').html(`${photoFile.name}<br />${photoImage.width}x${photoImage.height}`);
-
-                    $('#device-input').val('Unknown');
-                    $('#time-input').val('Unknown');
-                    $('#lens-input').val('Unknown');
-                    $('#location-input').val('Unknown');
-
-                    exifr.parse(e.target.result).then(res => {
-                        console.log(res);
-                        photoExif = res;
-                        if (res.Model) $('#device-input').val(res.Model);
-                        if (res['39424'] && typeof res['39424'] == 'string') $('#device-input').val(res['39424']); // Xiaomi
-                        if (res.CreateDate) $('#time-input').val(new Date(res.CreateDate).format('yyyy.MM.dd hh:mm:ss'));
-
-                        if (res.FocalLength) $('#lens-input').val(`${parseInt(res.FocalLength)}mm`);
-                        if (res.FocalLengthIn35mmFormat) $('#lens-input').val(`${parseInt(res.FocalLengthIn35mmFormat)}mm`);
-                        if (res.FNumber) $('#lens-input').val(`${$('#lens-input').val()} f/${res.FNumber.toFixed(1)}`);
-                        if (res.ExposureTime) $('#lens-input').val(`${$('#lens-input').val()} 1/${parseInt(res.ExposureTime ** -1)}`);
-                        if (res.ISO) $('#lens-input').val(`${$('#lens-input').val()} ISO${res.ISO}`);
-                        //if (res.FocalLength && res.FNumber && res.ExposureTime && res.ISO) $('#lens-input').val(`${parseInt(res.FocalLength)}mm f/${res.FNumber.toFixed(1)} 1/${parseInt(res.ExposureTime ** -1)} ISO${res.ISO}`);
-                        if (res.GPSLatitude && res.GPSLatitudeRef && res.GPSLongitude && res.GPSLongitudeRef) $('#location-input').val(`${res.GPSLatitude[0]}°${res.GPSLatitude[1]}'${parseInt(res.GPSLatitude[2])}"${res.GPSLatitudeRef} ${res.GPSLongitude[0]}°${res.GPSLongitude[1]}'${parseInt(res.GPSLongitude[2])}"${res.GPSLongitudeRef}`);
-
-                        mdui.mutation();
-
-                        $('#photo-area').addClass('mdui-hidden');
-                        $('#photo-canvas-div').removeClass('mdui-hidden');
-                        drawImage(true);
-                    });
-
-                    if (navigator.userAgent.indexOf('Mobile') > -1 && navigator.userAgent.indexOf('Safari/') > -1 && photoFile.size > 1024 ** 2 * 5) {
-                        mdui.snackbar({
-                            message: getI18n('this_image_cannot_be_saved_in_safari'),
-                            position: 'right-top'
-                        });
-                    }
-                }
-            }
-
-            reader.readAsDataURL(photoFile);
-
-            document.querySelector('#save-btn').disabled = false;
-            document.querySelector('#preview-btn').disabled = false;
-            $('#save-btn').text(getI18n('save'));
-        }
 
         function showModelEditor() {
             if ($('#device-input').val() == 'Unknown') {
@@ -633,28 +820,6 @@
             });
         }
 
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            $('body').addClass('mdui-theme-layout-dark');
-            $('#photo-area').removeClass('mdui-color-grey-200');
-            $('#photo-area').addClass('mdui-color-grey-700');
-        } else {
-            $('body').removeClass('mdui-theme-layout-dark');
-            $('#photo-area').removeClass('mdui-color-grey-700');
-            $('#photo-area').addClass('mdui-color-grey-200');
-        }
-
-        window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
-            if (e.matches) {
-                $('body').addClass('mdui-theme-layout-dark');
-                $('#photo-area').removeClass('mdui-color-grey-200');
-                $('#photo-area').addClass('mdui-color-grey-700');
-            } else {
-                $('body').removeClass('mdui-theme-layout-dark');
-                $('#photo-area').removeClass('mdui-color-grey-700');
-                $('#photo-area').addClass('mdui-color-grey-200');
-            }
-        });
-
         $('#photo-area').on('dragover', function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -732,6 +897,37 @@
 
         $('#zoom-select').on('change', () => {
             drawImage(true);
+        });
+
+        $('#quality-slider input').on('input', function () {
+            let value = $(this).val();
+            let displayText = value === "100" ? "原图" : value + "%";
+            $('#quality-value').text(displayText);
+            drawImage(true);
+
+        });
+
+        var isDarkMode = false; // 初始为浅色模式
+
+        $('#theme-toggle').on('click', function () {
+            $('body').addClass('mdui-theme-transition');
+            $('#photo-area').addClass('mdui-theme-transition');
+            setTimeout(() => {
+                $('body').removeClass('mdui-theme-transition');
+                $('#photo-area').removeClass('mdui-theme-transition');
+            }, 300);
+            if (isDarkMode) {
+                $('body').removeClass('mdui-theme-layout-dark');
+                $('#photo-area').removeClass('mdui-color-grey-700');
+                $('#photo-area').addClass('mdui-color-grey-200');
+                $('#theme-toggle i').text('brightness_4'); // 切换为浅色模式图标
+            } else {
+                $('body').addClass('mdui-theme-layout-dark');
+                $('#photo-area').removeClass('mdui-color-grey-200');
+                $('#photo-area').addClass('mdui-color-grey-700');
+                $('#theme-toggle i').text('brightness_7'); // 切换为深色模式图标
+            }
+            isDarkMode = !isDarkMode;
         });
     </script>
 </body>

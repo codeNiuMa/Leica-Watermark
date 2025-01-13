@@ -50,6 +50,7 @@ body {
     -webkit-user-select: none;
     user-select: none;
     font-family: MiSans;
+    transition: background-color 0.2s ease;
 }
 
 .mi-sans {
@@ -97,12 +98,14 @@ h1 {
     }
 
     #photo-col {
-        display: -webkit-box !important;
-        display: -ms-flexbox !important;
-        display: flex !important;
-        -webkit-box-align: center !important;
-        -ms-flex-align: center !important;
-        align-items: center !important;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        border-right: none;
+        flex: 1;
+        height: auto;
+        max-height: 100%;
+        padding: 16px;
     }
 
     #photo-container {
@@ -110,22 +113,51 @@ h1 {
     }
 
     #photo-area {
-        width: calc(100% - 32px);
-        height: 40% !important;
+        width: 570px;
+        height: 690px !important;
+        max-height: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        background-color: #fff;
+        transition: background-color 0.2s ease;
+    }
+
+    #photo-tip {
+        text-align: center;
+        color: #777;
+    }
+
+    #photo-info {
+        text-align: center;
+        color: #777;
     }
 
     #photo-canvas-div {
-        max-width: calc(100% - 32px);
+        height: auto;
+        width: auto;
+        max-width: 800px;
+        max-height: 700px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
     }
 
     #info-col {
-        height: calc(100% - 16px);
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-right: 0;
+        height: auto;
+        max-height: 80%;
         overflow-y: auto;
-
-        margin-top: 8px;
-        margin-right: -8px;
-
-        padding-right: 8px;
     }
 
     .mdui-snackbar-right-top {
@@ -134,4 +166,35 @@ h1 {
 
         border-radius: 6px;
     }
+
+    #main-flex {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    #photo-col,
+    #info-col {
+        flex: 1;
+        height: auto;
+        max-height: 80%;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+}
+
+.mdui-slider {
+    padding: 10px 0;
+    margin-bottom: 0;
+}
+
+#theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.mdui-theme-transition {
+    transition: background-color 0.2s ease;
 }

@@ -44,5 +44,8 @@
     "model_not_found": "Model not found",
     "cannot_match_unknown_model": "Cannot match unknown model",
     "this_image_cannot_be_saved_in_safari": "This image cannot be saved in Safari",
-    "changing_font_please_wait": "Changing fonts, please wait..."
+    "changing_font_please_wait": "Changing fonts, please wait...",
+    "no_location_info": "No location info",
+    "location_is_iceland": "Location is Iceland",
+    "getting_location_success": "Get location success"
 }
