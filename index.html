@@ -94,6 +94,9 @@
                                 <option value="sony">
                                     <script>document.write(getI18n('sony'))</script>
                                 </option>
+                                <option value="canon">
+                                    <script>document.write(getI18n('canon'))</script>
+                                </option>
                                 <option value="hasselblad">
                                     <script>document.write(getI18n('hasselbled'))</script>
                                 </option>
@@ -167,8 +170,7 @@
                     <label class="mdui-textfield-label">
                         <script>document.write(getI18n('device_name'))</script>
                     </label>
-                    <input id="device-input" class="mdui-textfield-input" type="text" onclick="showModelEditor()"
-                        disabled />
+                    <input id="device-input" class="mdui-textfield-input" type="text" disabled />
                 </div>
                 <div class="mdui-textfield mdui-textfield-floating-label">
                     <label class="mdui-textfield-label">
@@ -389,7 +391,7 @@
                         $('#lens-input').prop('disabled', false);
                         $('#location-input').prop('disabled', false);
 
-                        
+
 
                         // 为输入框添加 mdui-textfield-not-empty 类，使其显示 label
                         $('#device-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
@@ -425,9 +427,9 @@
         function previewImage() {
             $.showOverlay();
             var imageHeight;
-            var exportQuality = (Number($('#quality-slider input').val()) - 1) / 100;
+            var exportQuality = (Number($('#quality-slider input').val()) - 5) / 100; // 图片质量降低5%
             photoCanvas.toBlob(canvasBlob => {
-                imageHeight = `${document.body.clientWidth * .85 / photoCanvas.width * photoCanvas.height}px`;
+                imageHeight = `${document.body.clientWidth * .85 / photoCanvas.width * photoCanvas.height}px`;// 图片高度占屏幕宽度的85%
                 $.hideOverlay();
                 mdui.dialog({
                     content: `<img src="${URL.createObjectURL(canvasBlob)}" width="100%" height="${imageHeight}" />`,
@@ -448,15 +450,25 @@
         }
 
         function saveImage() {
+            // 设置保存按钮文字为“保存中...”
             $('#save-btn').text(getI18n('saving'));
+            // 禁用保存按钮，防止重复点击
             document.querySelector('#save-btn').disabled = true;
-            var exportQuality = Number($('#quality-slider input').val()) / 100;
+            // 获取图片质量，并降低5%
+            var exportQuality = (Number($('#quality-slider input').val()) - 5) / 100;
+            // 将 canvas 转换为 blob 对象
             photoCanvas.toBlob(canvasBlob => {
+                // 创建一个 a 标签，用于下载图片
                 var imageLink = document.createElement('a');
-                imageLink.download = `photomark_${new Date().format('yyyyMMddhhmmss')}.jpg`;
+                // 设置下载的文件名
+                imageLink.download = `watermark_${new Date().format('yyyyMMddhhmmss')}.jpg`;
+                // 设置下载链接
                 imageLink.href = URL.createObjectURL(canvasBlob);
+                // 模拟点击 a 标签，开始下载
                 imageLink.click();
+                // 下载完成后，设置保存按钮文字为“保存”
                 $('#save-btn').text(getI18n('save'));
+                // 启用保存按钮
                 document.querySelector('#save-btn').disabled = false;
             }, 'image/jpeg', exportQuality);
         }
@@ -610,11 +622,11 @@
                         logoImage.onload = () => {
                             var logoHeight = 250;
                             var pianyi = 30;
-                            if ($('#logo-select').val() == 'sony') {
+                            if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'canon') {
                                 pianyi = 200;
                             }
                             // 将 logo 绘制到 canvas 上
-                            photoCtx.drawImage(logoImage, photoWidth - specLength - 600 - pianyi, photoHeight + 180 - (pianyi/2), logoHeight+pianyi, logoHeight+pianyi);
+                            photoCtx.drawImage(logoImage, photoWidth - specLength - 600 - pianyi, photoHeight + 180 - (pianyi / 2), logoHeight + pianyi, logoHeight + pianyi);
 
                             // 绘制 logo 分割线
                             photoCtx.moveTo(photoWidth - specLength - 280, photoHeight + 190);
@@ -622,11 +634,12 @@
                             photoCtx.lineWidth = 10;
                             photoCtx.strokeStyle = '#cccccc';
                             photoCtx.stroke();
-                            
+
                             // 如果是预览模式
                             if (preview) {
                                 // 获取图片质量
-                                var exportQuality = Number($('#quality-slider input').val()) / 100;
+                                var exportQuality = (Number($('#quality-slider input').val()) - 5) / 100; // 图片质量降低5%
+                                var previewQuality = exportQuality / 5;
                                 // 将 canvas 转换为 blob 对象
                                 photoCanvas.toBlob(canvasBlob => {
                                     // 设置 #photo-canvas-div 的样式
@@ -654,11 +667,11 @@
                                     }
 
                                     // 设置预览图的 src 属性
-                                    $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob));
+                                    $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob) + '?' + new Date().getTime());
                                     $('#photo-area').addClass('mdui-hidden');
                                     $('#photo-container').removeClass('mdui-hidden');
                                     $('#photo-canvas-div').removeClass('mdui-hidden');
-                                }, 'image/jpg', exportQuality);
+                                }, 'image/jpeg', previewQuality);
                             } else {
                                 // 保存图片
                                 saveImage();
@@ -668,7 +681,8 @@
                         // 如果没有选择 logo
                         if (preview) {
                             // 获取图片质量
-                            var exportQuality = Number($('#quality-slider input').val()) / 100;
+                            var exportQuality = (Number($('#quality-slider input').val()) - 5) / 100; // 图片质量降低5%
+                            var previewQuality = exportQuality / 5;
                             // 将 canvas 转换为 blob 对象
                             photoCanvas.toBlob(canvasBlob => {
 
@@ -684,7 +698,7 @@
                                         'width': 'auto',
                                         'height': '700px'
                                     });
-                                    
+
                                     $('#photo-preview').attr('width', 'auto'); // 图片宽度占满容器
                                     $('#photo-preview').attr('height', '100%'); // 图片高度自动调整
                                 } else {
@@ -698,10 +712,12 @@
 
                                 // 设置预览图的 src 属性
                                 $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob));
+                                console.log("canvasBlob", canvasBlob);
                                 $('#photo-area').addClass('mdui-hidden');
                                 $('#photo-container').removeClass('mdui-hidden');
                                 $('#photo-canvas-div').removeClass('mdui-hidden');
-                            }, 'image/jpg', exportQuality);
+                                console.log("previewQuality", previewQuality);
+                            }, 'image/jpeg', previewQuality);
                         } else {
                             // 保存图片
                             saveImage();
@@ -908,6 +924,14 @@
         });
 
         var isDarkMode = false; // 初始为浅色模式
+        var currentHour = new Date().getHours();
+        if (currentHour < 8 || currentHour >= 22) {
+            isDarkMode = true;
+            $('body').addClass('mdui-theme-layout-dark');
+            $('#photo-area').removeClass('mdui-color-grey-200');
+            $('#photo-area').addClass('mdui-color-grey-700');
+            $('#theme-toggle i').text('brightness_7'); // 切换为深色模式图标
+        }
 
         $('#theme-toggle').on('click', function () {
             $('body').addClass('mdui-theme-transition');
@@ -928,6 +952,22 @@
                 $('#theme-toggle i').text('brightness_7'); // 切换为深色模式图标
             }
             isDarkMode = !isDarkMode;
+        });
+
+        $('#device-input').on('input', function () {
+            drawImage(true);
+        });
+
+        $('#time-input').on('input', function () {
+            drawImage(true);
+        });
+
+        $('#lens-input').on('input', function () {
+            drawImage(true);
+        });
+
+        $('#location-input').on('input', function () {
+            drawImage(true);
         });
     </script>
 </body>
