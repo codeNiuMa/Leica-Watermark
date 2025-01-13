@@ -667,7 +667,7 @@
                                     }
 
                                     // 设置预览图的 src 属性
-                                    $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob) + '?' + new Date().getTime());
+                                    $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob));
                                     $('#photo-area').addClass('mdui-hidden');
                                     $('#photo-container').removeClass('mdui-hidden');
                                     $('#photo-canvas-div').removeClass('mdui-hidden');
