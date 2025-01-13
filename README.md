@@ -1,5 +1,5 @@
 # Photomark
-照片添加水印工具
+照片添加水印工具，![GitHub pages在线使用](https://codeniuma.github.io/Photomark/)
 
 ## Features
 * 各品牌logo & 多种字体
