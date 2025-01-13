@@ -1,5 +1,5 @@
 # Photomark
-照片添加徕卡相框（索尼、尼康、佳能、一加。。。。。。。）工具，[GitHub pages在线使用](https://codeniuma.github.io/Photomark/)
+照片添加徕卡相框（索尼、尼康、佳能、一加。。。。。。。）工具，[GitHub pages在线使用](https://codeniuma.github.io/Leica-Watermark/)
 
 ## Features
 * 各品牌logo & 多种字体
