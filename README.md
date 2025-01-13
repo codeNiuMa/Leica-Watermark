@@ -5,6 +5,8 @@
 * 各品牌logo & 多种字体
 * 本地静态网页执行
 * 深色浅色模式切换
+* ![PixPin_2025-01-13_23-11-22](https://github.com/user-attachments/assets/b47cdc88-4ffd-4962-8e41-d26d5d877bcc)
+
 
 ## Known bugs
 * Northeast hemisphere positioning support only
