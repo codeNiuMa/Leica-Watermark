@@ -13,7 +13,7 @@
 * Maximum 5MB limit in Safari
 
 ## Preview
-
+![preview](./67854aebdd8dd_67854aebe794b.gif)
 
 ## Version
 ### 25.01.13
