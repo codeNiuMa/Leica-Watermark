@@ -15,3 +15,9 @@
 ## Preview
 ![PixPin_2025-01-13_23-01-15](https://github.com/user-attachments/assets/8e430e65-10d1-445b-8e53-b1c2eb8f1928)
 
+## Version
+### 25.01.13
+1.修复了手动编辑信息后照片无法更改的问题
+2.修复了原有的未知机型弹窗
+3.添加了Canon的logo
+
