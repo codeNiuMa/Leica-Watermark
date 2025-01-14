@@ -10,6 +10,9 @@
     <title>WaterMark</title>
     <link href="https://cdn.staticfile.org/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
     <link href="./photomark.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="./node_modules/aplayer/dist/APlayer.min.css">
+
     <script src="https://cdn.staticfile.org/mdui/1.0.2/js/mdui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exifr/dist/full.umd.js"></script>
     <script src="./logo.js"></script>
@@ -48,6 +51,10 @@
             }
             return i18nItem;
         }
+
+
+
+    </script>
     </script>
 </head>
 
@@ -225,14 +232,38 @@
                     </p>
                 </div>
                 <br />
-                <div class="mdui-float-right">
-                    <button id="theme-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
-                        <i class="mdui-icon material-icons">brightness_4</i>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
+    <div class="mdui-float-right" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <!-- 主题切换 -->
+        <button id="theme-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
+            <i class="mdui-icon material-icons">brightness_4</i>
+        </button>
+        <!-- 动画切换 -->
+        <button id="animation-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
+            <i class="mdui-icon material-icons">blur_off</i>
+        </button>
+    </div>
+    <div id="aplayer"></div>
+    <script src="./node_modules/aplayer/dist/APlayer.min.js"></script>
+    <script>        const ap = new APlayer({
+            container: document.getElementById('aplayer'),
+            fixed: true,
+            theme: '#ff0080',
+            audio: [{
+                name: 'name',
+                artist: 'artist',
+                url: 'url.mp3',
+                cover: 'cover.jpg'
+            }]
+        });
+    </script>
+
+
+
+
+
     <script>
         var $ = mdui.$;
         var photoFile;
@@ -450,7 +481,7 @@
         }
 
         function saveImage() {
-            // 设置保存按钮文字为“保存中...”
+            // 设置保存按钮文字为"保存中..."
             $('#save-btn').text(getI18n('saving'));
             // 禁用保存按钮，防止重复点击
             document.querySelector('#save-btn').disabled = true;
@@ -466,7 +497,7 @@
                 imageLink.href = URL.createObjectURL(canvasBlob);
                 // 模拟点击 a 标签，开始下载
                 imageLink.click();
-                // 下载完成后，设置保存按钮文字为“保存”
+                // 下载完成后，设置保存按钮文字为"保存"
                 $('#save-btn').text(getI18n('save'));
                 // 启用保存按钮
                 document.querySelector('#save-btn').disabled = false;
@@ -652,7 +683,7 @@
                                     if (photoCanvas.height > photoCanvas.width) {
                                         $('#photo-canvas-div').css({
                                             'width': 'auto',
-                                            'height': '700px'
+                                            'height': '800px'
                                         });
 
                                         $('#photo-preview').attr('width', 'auto'); // 图片宽度占满容器
@@ -969,6 +1000,31 @@
         $('#location-input').on('input', function () {
             drawImage(true);
         });
+
+        // 动画开关状态，默认开启
+        let isAnimationOn = false;
+
+        // 初始应用动画状态
+        applyAnimationState();
+
+        // 动画开关按钮点击事件
+        $('#animation-toggle').on('click', function () {
+            // 切换动画状态
+            isAnimationOn = !isAnimationOn;
+            // 更新按钮图标
+            $(this).find('i').text(isAnimationOn ? 'blur_on' : 'blur_off');
+            // 应用动画状态
+            applyAnimationState();
+        });
+
+        // 应用动画状态的函数
+        function applyAnimationState() {
+            if (isAnimationOn) {
+                $('body').removeClass('animation-off');
+            } else {
+                $('body').addClass('animation-off');
+            }
+        }
     </script>
 </body>
 

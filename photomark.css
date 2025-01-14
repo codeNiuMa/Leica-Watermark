@@ -51,7 +51,32 @@ body {
     user-select: none;
     font-family: MiSans;
     transition: background-color 0.2s ease;
+    background: linear-gradient(45deg, #ff0080, #ff8c00, #ffd700, #90ee90, #00ced1, #1e90ff,#c71585, #ff1493,#ffd700, #dc143c, #ffa07a);
+    background-size: 2100% 2100%;
+    /* 增加背景尺寸以允许更平滑的过渡 */
+    animation: gradientAnimation 10s linear infinite;
 }
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+body.animation-off {
+    animation: none;
+    background: #fff;
+}
+
+body.mdui-theme-layout-dark.animation-off {
+    background: #212121;
+}
+
+
 
 .mi-sans {
     font-family: MiSans !important;
@@ -120,7 +145,7 @@ h1 {
         align-items: center;
         justify-content: center;
         border: 1px solid #ccc;
-        border-radius: 8px;
+        border-radius: 24px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         padding: 16px;
         background-color: #fff;
@@ -141,7 +166,7 @@ h1 {
         height: auto;
         width: auto;
         max-width: 800px;
-        max-height: 700px;
+        max-height: 800px;
         border: 1px solid #ccc;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -150,7 +175,7 @@ h1 {
 
     #info-col {
         border: 1px solid #ccc;
-        border-radius: 8px;
+        border-radius: 24px;
         padding: 16px;
         margin-top: 0;
         margin-bottom: 0;
@@ -158,6 +183,12 @@ h1 {
         height: auto;
         max-height: 80%;
         overflow-y: auto;
+        background-color: #fff;
+        opacity: 0.66;
+    }
+
+    body.mdui-theme-layout-dark #info-col {
+        background-color: #333;
     }
 
     .mdui-snackbar-right-top {
@@ -189,12 +220,19 @@ h1 {
 }
 
 #theme-toggle {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
     z-index: 1000;
 }
 
 .mdui-theme-transition {
     transition: background-color 0.2s ease;
 }
+
+.mdui-float-right button {
+    margin-left: 8px;
+}
+#aplayer>div.aplayer-body{
+    left: 20px;
+    bottom: 20px;
+
+}
+
