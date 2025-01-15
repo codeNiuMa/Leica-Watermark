@@ -184,7 +184,7 @@ h1 {
         max-height: 80%;
         overflow-y: auto;
         background-color: #fff;
-        opacity: 0.66;
+        opacity: 0.75;
     }
 
     body.mdui-theme-layout-dark #info-col {
@@ -230,9 +230,8 @@ h1 {
 .mdui-float-right button {
     margin-left: 8px;
 }
-#aplayer>div.aplayer-body{
-    left: 20px;
-    bottom: 20px;
 
+div.aplayer-body {
+    left: 20px !important;
+    bottom: 20px !important;
 }
-

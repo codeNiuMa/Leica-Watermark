@@ -11,10 +11,12 @@
     <link href="https://cdn.staticfile.org/mdui/1.0.2/css/mdui.min.css" rel="stylesheet">
     <link href="./photomark.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="./node_modules/aplayer/dist/APlayer.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+
 
     <script src="https://cdn.staticfile.org/mdui/1.0.2/js/mdui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/exifr/dist/full.umd.js"></script>
+
     <script src="./logo.js"></script>
     <script>
         var $ = mdui.$;
@@ -245,20 +247,15 @@
             <i class="mdui-icon material-icons">blur_off</i>
         </button>
     </div>
-    <div id="aplayer"></div>
-    <script src="./node_modules/aplayer/dist/APlayer.min.js"></script>
-    <script>        const ap = new APlayer({
-            container: document.getElementById('aplayer'),
-            fixed: true,
-            theme: '#ff0080',
-            audio: [{
-                name: 'name',
-                artist: 'artist',
-                url: 'url.mp3',
-                cover: 'cover.jpg'
-            }]
-        });
-    </script>
+
+    <meting-js class="meting" id="150127127" lrc-type="0" server="netease" order="random" type="album" list-olded="true"
+        autoplay="true" fixed="true">
+    </meting-js>
+
+    <!-- require Aplayer -->
+    <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    <!-- require MetingJS -->
+    <script src="https://cdn.jsdelivr.net/npm/meting@2.0.1/dist/Meting.min.js"></script>
 
 
 
@@ -683,7 +680,7 @@
                                     if (photoCanvas.height > photoCanvas.width) {
                                         $('#photo-canvas-div').css({
                                             'width': 'auto',
-                                            'height': '800px'
+                                            'height': '700px'
                                         });
 
                                         $('#photo-preview').attr('width', 'auto'); // 图片宽度占满容器
