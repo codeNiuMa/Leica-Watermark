@@ -1019,7 +1019,7 @@
                 $('#logo-select option[value="sony"]').css('display', 'block');
                 $('#logo-select option[value="hasselblad_dark"]').css('display', 'none');
                 $('#logo-select option[value="hasselblad"]').css('display', 'block');
-                if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'hasselblad') {
+                if ($('#logo-select').val().includes('sony') || $('#logo-select').val().includes('hasselblad')) {
                     $('#logo-select').val($('#logo-select').val().replace('_dark', ''));
                 }
                 $('#photo-toggle i').text('wb_sunny');
