@@ -87,6 +87,11 @@
                         <canvas id="photo-canvas" class="mdui-hidden"></canvas>
                         <img id="photo-preview" class="mdui-img-rounded mdui-shadow-3" onclick="chooseFile()">
                     </div>
+                    <!-- 添加一个点击切换太阳月亮的图标 -->
+                    <div id="photo-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
+                        <i class="mdui-icon material-icons">wb_sunny</i>
+                        <!-- <i class="mdui-icon material-icons">brightness_3</i> -->
+                    </div>
                 </div>
             </div>
             <div id="info-col" class="mdui-col">
@@ -96,6 +101,7 @@
                             <label class="mdui-textfield-label">
                                 <script>document.write(getI18n('logo_type'))</script>
                             </label>
+                            <!-- logo 选择 -->
                             <select id="logo-select" class="mdui-select mdui-textfield-input">
                                 <option value="none">
                                     <script>document.write(getI18n('none'))</script>
@@ -103,10 +109,16 @@
                                 <option value="sony">
                                     <script>document.write(getI18n('sony'))</script>
                                 </option>
+                                <option value="sony_dark" style="display: none;">
+                                    <script>document.write(getI18n('sony_dark'))</script>
+                                </option>
                                 <option value="canon">
                                     <script>document.write(getI18n('canon'))</script>
                                 </option>
                                 <option value="hasselblad">
+                                    <script>document.write(getI18n('hasselbled'))</script>
+                                </option>
+                                <option value="hasselblad_dark" style="display: none;">
                                     <script>document.write(getI18n('hasselbled'))</script>
                                 </option>
                                 <option value="leica">
@@ -249,7 +261,7 @@
     </div>
 
     <meting-js class="meting" id="150127127" lrc-type="0" server="netease" order="random" type="album" list-olded="true"
-        autoplay="true" fixed="true">
+        autoplay="false" fixed="true">
     </meting-js>
 
     <!-- require Aplayer -->
@@ -577,7 +589,11 @@
             }
         }
 
+
         function drawImage(preview) {
+            // 获取主题颜色,false为黑色，true为白色
+            var photoTheme = $('#photo-toggle i').text() === 'brightness_3' ? false : true;
+
             // 如果 preview 未定义，则设置为 false
             if (typeof preview == 'undefined') preview = false;
             // 创建 FileReader 对象
@@ -608,7 +624,7 @@
                     photoCanvas.height = photoHeight + 614;
 
                     // 设置 canvas 背景色为白色
-                    photoCtx.fillStyle = 'white';
+                    photoCtx.fillStyle = photoTheme ? 'white' : 'black';
                     // 填充 canvas 背景
                     photoCtx.fillRect(0, 0, photoCanvas.width, photoCanvas.height);
                     // 将图片绘制到 canvas 上
@@ -617,7 +633,7 @@
                     // 设置字体样式
                     photoCtx.font = `bold 120px ${fontList[parseInt($('#font-select').val())]}`;
                     // 设置字体颜色为黑色
-                    photoCtx.fillStyle = 'black';
+                    photoCtx.fillStyle = !photoTheme ? 'white' : 'black';
 
                     // 获取镜头信息文本的宽度
                     var specLength = photoCtx.measureText($('#lens-input').val()).width;
@@ -638,19 +654,19 @@
                     photoCtx.fillText($('#time-input').val(), 200, photoHeight + 434);
                     // 在 canvas 上绘制位置信息
                     photoCtx.fillText($('#location-input').val(), photoWidth - specLength - 200, photoHeight + 434);
-
+                    console.log("进入选择logo函数");
                     // 如果选择了 logo
                     if ($('#logo-select').val() != 'none') {
                         // 创建 logo Image 对象
                         var logoImage = new Image();
                         // 设置 logo Image 对象的 src 属性
                         logoImage.src = logoList[$('#logo-select').val()];
-
+                        console.log("logoImage.src",$('#logo-select').val());
                         // 当 logo Image 对象加载完成时
                         logoImage.onload = () => {
                             var logoHeight = 250;
                             var pianyi = 30;
-                            if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'canon') {
+                            if ($('#logo-select').val().includes('sony') || $('#logo-select').val() == 'canon') {
                                 pianyi = 200;
                             }
                             // 将 logo 绘制到 canvas 上
@@ -980,6 +996,35 @@
                 $('#theme-toggle i').text('brightness_7'); // 切换为深色模式图标
             }
             isDarkMode = !isDarkMode;
+        });
+
+        $('#photo-toggle').on('click', function () {
+            // 获取当前标签值
+            var currentValue = $('#photo-toggle i').text();
+            if (currentValue === 'wb_sunny') {
+                $('#logo-select option[value="sony_dark"]').css('display', 'block');
+                $('#logo-select option[value="sony"]').css('display', 'none');
+                $('#logo-select option[value="hasselblad_dark"]').css('display', 'block');
+                $('#logo-select option[value="hasselblad"]').css('display', 'none');
+                if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'hasselblad') {
+                    $('#logo-select').val($('#logo-select').val() + '_dark');
+                }
+                console.log($('#logo-select').val());
+                $('#photo-toggle i').text('brightness_3');
+                console.log("daozzheli");
+                
+                drawImage(true);
+            } else {
+                $('#logo-select option[value="sony_dark"]').css('display', 'none');
+                $('#logo-select option[value="sony"]').css('display', 'block');
+                $('#logo-select option[value="hasselblad_dark"]').css('display', 'none');
+                $('#logo-select option[value="hasselblad"]').css('display', 'block');
+                if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'hasselblad') {
+                    $('#logo-select').val($('#logo-select').val().replace('_dark', ''));
+                }
+                $('#photo-toggle i').text('wb_sunny');
+                drawImage(true);
+            }
         });
 
         $('#device-input').on('input', function () {
