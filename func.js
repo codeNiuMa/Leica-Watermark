@@ -390,7 +390,7 @@ function drawImage(preview) {
                 logoImage.onload = () => {
                     var logoHeight = 250;
                     var pianyi = 30;
-                    if ($('#logo-select').val().includes('sony') || $('#logo-select').val() == 'canon') {
+                    if ($('#logo-select').val().includes('sony') || $('#logo-select').val().includes('canon') || $('#logo-select').val().includes('fujifilm')) {
                         pianyi = 200;
                     }
                     // 将 logo 绘制到 canvas 上
@@ -722,6 +722,7 @@ $('#theme-toggle').on('click', function () {
     isDarkMode = !isDarkMode;
 });
 
+// 黑白边框切换，需要改变一些logo
 $('#photo-toggle').on('click', function () {
     // 获取当前标签值
     var currentValue = $('#photo-toggle i').text();
@@ -730,7 +731,9 @@ $('#photo-toggle').on('click', function () {
         $('#logo-select option[value="sony"]').css('display', 'none');
         $('#logo-select option[value="hasselblad_dark"]').css('display', 'block');
         $('#logo-select option[value="hasselblad"]').css('display', 'none');
-        if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'hasselblad') {
+        $('#logo-select option[value="fujifilm_dark"]').css('display', 'block');
+        $('#logo-select option[value="fujifilm"]').css('display', 'none');
+        if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'hasselblad' || $('#logo-select').val() == 'fujifilm')  {
             $('#logo-select').val($('#logo-select').val() + '_dark');
         }
         console.log($('#logo-select').val());
@@ -743,7 +746,9 @@ $('#photo-toggle').on('click', function () {
         $('#logo-select option[value="sony"]').css('display', 'block');
         $('#logo-select option[value="hasselblad_dark"]').css('display', 'none');
         $('#logo-select option[value="hasselblad"]').css('display', 'block');
-        if ($('#logo-select').val().includes('sony') || $('#logo-select').val().includes('hasselblad')) {
+        $('#logo-select option[value="fujifilm_dark"]').css('display', 'none');
+        $('#logo-select option[value="fujifilm"]').css('display', 'block');
+        if ($('#logo-select').val().includes('sony') || $('#logo-select').val().includes('hasselblad') || $('#logo-select').val().includes('fujifilm')) {
             $('#logo-select').val($('#logo-select').val().replace('_dark', ''));
         }
         $('#photo-toggle i').text('wb_sunny');
