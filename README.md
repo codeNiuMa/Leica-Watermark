@@ -30,6 +30,9 @@
 ### 25.01.23
 1. 适配了黑色边框(正在适配更多logo...)
 ![PixPin_2025-01-23_00-53-39](https://github.com/user-attachments/assets/8fd40fcf-ffeb-47ca-a3b1-3fb4f48c3ec7)
+2. 添加了FUJIFILM的logo
+3. 添加了页面图片背景，点击右下角图标启用
+4. 优化了主题区域显示
 
 
 
