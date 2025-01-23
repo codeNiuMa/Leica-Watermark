@@ -243,3 +243,23 @@ div.aplayer-body {
     left: 20px !important;
     bottom: 20px !important;
 }
+
+#theme-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px;
+    overflow: hidden;
+    padding: 10px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    background: rgba(201, 201, 201, 0.3);
+    border: 1px solid #616161;
+}
+
+#theme-container button {
+    margin: 0 10px;
+}
