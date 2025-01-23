@@ -76,7 +76,15 @@ body.mdui-theme-layout-dark.animation-off {
     background: #212121;
 }
 
+body.background-image {
+    background: url("https://unsplash.it/1920/1080?random") no-repeat center center fixed;
+    background-size: cover;
+}
 
+body.mdui-theme-layout-dark.background-image {
+    background: url("https://unsplash.it/1920/1080?random") no-repeat center center fixed;
+    background-size: cover;
+}
 
 .mi-sans {
     font-family: MiSans !important;
@@ -184,7 +192,7 @@ h1 {
         max-height: 80%;
         overflow-y: auto;
         background-color: #fff;
-        opacity: 0.75;
+        opacity: 0.85;
     }
 
     body.mdui-theme-layout-dark #info-col {

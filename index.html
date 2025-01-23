@@ -252,11 +252,15 @@
     <div class="mdui-float-right" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
         <!-- 主题切换 -->
         <button id="theme-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
-            <i class="mdui-icon material-icons">brightness_4</i>
+            <i class="mdui-icon material-icons">brightness_7</i>
+        </button>
+        <!-- 背景切换 -->
+        <button id="background-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
+            <i class="mdui-icon material-icons">wallpaper</i>
         </button>
         <!-- 动画切换 -->
         <button id="animation-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
-            <i class="mdui-icon material-icons">blur_off</i>
+            <i class="mdui-icon material-icons">blur_on</i>
         </button>
     </div>
 
@@ -988,12 +992,12 @@
                 $('body').removeClass('mdui-theme-layout-dark');
                 $('#photo-area').removeClass('mdui-color-grey-700');
                 $('#photo-area').addClass('mdui-color-grey-200');
-                $('#theme-toggle i').text('brightness_4'); // 切换为浅色模式图标
+                $('#theme-toggle i').text('brightness_7'); // 切换为浅色模式图标
             } else {
                 $('body').addClass('mdui-theme-layout-dark');
                 $('#photo-area').removeClass('mdui-color-grey-200');
                 $('#photo-area').addClass('mdui-color-grey-700');
-                $('#theme-toggle i').text('brightness_7'); // 切换为深色模式图标
+                $('#theme-toggle i').text('brightness_4'); // 切换为深色模式图标
             }
             isDarkMode = !isDarkMode;
         });
@@ -1043,7 +1047,7 @@
             drawImage(true);
         });
 
-        // 动画开关状态，默认开启
+        // 动画开关状态，默认关闭
         let isAnimationOn = false;
 
         // 初始应用动画状态
@@ -1054,7 +1058,7 @@
             // 切换动画状态
             isAnimationOn = !isAnimationOn;
             // 更新按钮图标
-            $(this).find('i').text(isAnimationOn ? 'blur_on' : 'blur_off');
+            $(this).find('i').text(isAnimationOn ? 'blur_off' : 'blur_on');
             // 应用动画状态
             applyAnimationState();
         });
@@ -1065,6 +1069,30 @@
                 $('body').removeClass('animation-off');
             } else {
                 $('body').addClass('animation-off');
+            }
+        }
+
+        // 新增：背景图片状态，默认关闭
+        let isBackgroundOn = false;
+
+        // 新增：背景图片切换按钮点击事件
+        $('#background-toggle').on('click', function () {
+            // 切换背景图片状态
+            isBackgroundOn = !isBackgroundOn;
+            // 更新按钮图标
+            $('#background-toggle i').text(isBackgroundOn ? 'photo_size_select_large' : 'wallpaper');
+            // 应用背景图片状态
+            applyBackgroundState();
+        });
+
+        // 新增：应用背景图片状态的函数
+        function applyBackgroundState() {
+            if (isBackgroundOn) {
+                // 添加背景图片样式
+                $('body').addClass('background-image');
+            } else {
+                // 移除背景图片样式
+                $('body').removeClass('background-image');
             }
         }
     </script>
