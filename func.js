@@ -798,7 +798,8 @@ function applyAnimationState() {
 }
 
 // 新增：背景图片状态，默认关闭
-let isBackgroundOn = false;
+let isBackgroundOn = true;
+applyBackgroundState();
 
 // 新增：背景图片切换按钮点击事件
 $('#background-toggle').on('click', function () {

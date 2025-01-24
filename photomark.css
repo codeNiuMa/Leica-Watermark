@@ -77,12 +77,12 @@ body.mdui-theme-layout-dark.animation-off {
 }
 
 body.background-image {
-    background: url("https://unsplash.it/1920/1080?random") no-repeat center center fixed;
+    background: url("https://unsplash.it/2560/1440?random") no-repeat center center fixed;
     background-size: cover;
 }
 
 body.mdui-theme-layout-dark.background-image {
-    background: url("https://unsplash.it/1920/1080?random") no-repeat center center fixed;
+    background: url("https://unsplash.it/2560/1440?random") no-repeat center center fixed;
     background-size: cover;
 }
 
