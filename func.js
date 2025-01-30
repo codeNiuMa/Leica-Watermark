@@ -72,6 +72,8 @@ function chooseFile() {
             readImage(e.path[0].files[0]);
         }
     }
+
+    readImage('testphoto-横');
 }
 
 function readImage(file) {
@@ -115,7 +117,7 @@ function readImage(file) {
 
             // 使用 exifr 解析图片 EXIF 信息
             exifr.parse(e.target.result).then(res => {
-                console.log(res);
+                console.log("图片 EXIF 信息: ",res);
                 // 将 EXIF 信息保存到 photoExif 变量
                 photoExif = res;
                 // 如果 EXIF 中有 Model 信息，则显示设备型号
@@ -131,22 +133,13 @@ function readImage(file) {
                 // 如果 EXIF 中有光圈信息，则显示镜头光圈
                 if (res.FNumber) $('#lens-input').val(`${$('#lens-input').val()} f/${res.FNumber.toFixed(1)}`);
                 // 如果 EXIF 中有曝光时间信息，则显示镜头曝光时间
-                if (res.ExposureTime) $('#lens-input').val(`${$('#lens-input').val()} 1/${parseInt(res.ExposureTime ** -1)}`);
+                if (res.ExposureTime) $('#lens-input').val(`${$('#lens-input').val()} 1/${parseInt(res.ExposureTime ** -1)}s`);
                 // 如果 EXIF 中有 ISO 信息，则显示镜头 ISO
                 if (res.ISO) $('#lens-input').val(`${$('#lens-input').val()} ISO${res.ISO}`);
                 //if (res.FocalLength && res.FNumber && res.ExposureTime && res.ISO) $('#lens-input').val(`${parseInt(res.FocalLength)}mm f/${res.FNumber.toFixed(1)} 1/${parseInt(res.ExposureTime ** -1)} ISO${res.ISO}`);
                 // 如果 EXIF 中有 GPS 信息，则显示拍摄位置
-                if (res.GPSLatitude && res.GPSLatitudeRef && res.GPSLongitude && res.GPSLongitudeRef) {
-                    let latitude = res.GPSLatitude[0] + res.GPSLatitude[1] / 60 + res.GPSLatitude[2] / 3600;
-                    let longitude = res.GPSLongitude[0] + res.GPSLongitude[1] / 60 + res.GPSLongitude[2] / 3600;
-                    let latitudeDirection = res.GPSLatitudeRef === 'N' ? 'N' : 'S';
-                    let longitudeDirection = res.GPSLongitudeRef === 'E' ? 'E' : 'W';
-                    $('#location-input').val(`${latitude.toFixed(4)}°${latitudeDirection} ${longitude.toFixed(4)}°${longitudeDirection}`);
-                } else {
-                    // 如果没有 GPS 信息，则显示无位置信息
-                    $('#location-input').val(getI18n('no_location_info'));
-                }
-
+                getGPS(res);
+                
                 mdui.mutation();
 
                 // 启用设备、时间、镜头和位置输入框
@@ -186,6 +179,20 @@ function readImage(file) {
     document.querySelector('#preview-btn').disabled = false;
     // 设置保存按钮文字为保存
     $('#save-btn').text(getI18n('save'));
+}
+
+function getGPS(res){
+    if (res.GPSLatitude && res.GPSLatitudeRef && res.GPSLongitude && res.GPSLongitudeRef) {
+        let latitude = res.GPSLatitude[0] + res.GPSLatitude[1] / 60 + res.GPSLatitude[2] / 3600;
+        let longitude = res.GPSLongitude[0] + res.GPSLongitude[1] / 60 + res.GPSLongitude[2] / 3600;
+        let latitudeDirection = res.GPSLatitudeRef === 'N' ? 'N' : 'S';
+        let longitudeDirection = res.GPSLongitudeRef === 'E' ? 'E' : 'W';
+        // $('#location-input').val(`${latitude.toFixed(4)}°${latitudeDirection} ${longitude.toFixed(4)}°${longitudeDirection}`);
+        $('#location-input').val(`${res.GPSLatitude[0]}°${res.GPSLatitude[1]}'${parseInt(res.GPSLatitude[2])}"${res.GPSLatitudeRef} ${res.GPSLongitude[0]}°${res.GPSLongitude[1]}'${parseInt(res.GPSLongitude[2])}"${res.GPSLongitudeRef}`)
+    } else {
+        // 如果没有 GPS 信息，则显示无位置信息
+        $('#location-input').val(getI18n('no_location_info'));
+    }
 }
 
 function previewImage() {
@@ -245,17 +252,21 @@ function getLocation() {
     });
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
-            mdui.snackbar({
-                message: getI18n('getting_location_success'),
-                position: 'right-top',
-                timeout: 1000
-            });
-            let latitude = position.coords.latitude;
-            let longitude = position.coords.longitude;
-            let latitudeDirection = latitude >= 0 ? 'N' : 'S';
-            let longitudeDirection = longitude >= 0 ? 'E' : 'W';
-            $('#location-input').val(`${Math.abs(latitude)}°${latitudeDirection} ${Math.abs(longitude)}°${longitudeDirection}`);
-            $('#location-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
+            // mdui.snackbar({
+            //     message: getI18n('getting_location_success'),
+            //     position: 'right-top',
+            //     timeout: 1000
+            // });
+            // let latitude = position.coords.latitude;
+            // let longitude = position.coords.longitude;
+            // let latitudeDirection = latitude >= 0 ? 'N' : 'S';
+            // let longitudeDirection = longitude >= 0 ? 'E' : 'W';
+            // $('#location-input').val(`${Math.abs(latitude)}°${latitudeDirection} ${Math.abs(longitude)}°${longitudeDirection}`);
+            // $('#location-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
+            const coords = position.coords || {};
+            const { latitude, longitude } = coords;
+            console.log(latitude, longitude);
+            $('#location-input').val(`${changeToDFM(latitude)}N ${changeToDFM(longitude)}E`);
             drawImage(true);
         }, () => {
             $('#location-input').val('64.9631°N -19.0208°W');
@@ -265,10 +276,10 @@ function getLocation() {
                 position: 'right-top'
             });
             drawImage(true);
-            mdui.snackbar({
-                message: getI18n('cant_get_your_location'),
-                position: 'right-top'
-            });
+            // mdui.snackbar({
+            //     message: getI18n('cant_get_your_location'),
+            //     position: 'right-top'
+            // });
         });
     } else {
         mdui.snackbar({
@@ -320,19 +331,15 @@ function drawImage(preview) {
 
     // 如果 preview 未定义，则设置为 false
     if (typeof preview == 'undefined') preview = false;
-    // 创建 FileReader 对象
     var reader = new FileReader();
     // 当 FileReader 读取文件完成时
     reader.onload = (e) => {
-        // 创建 Image 对象
         var photoImage = new Image();
         // 设置 Image 对象的 src 属性为读取的文件内容
         photoImage.src = e.target.result;
-        // 当 Image 对象加载完成时
         photoImage.onload = () => {
-            // 获取图片宽度
+            // 获取图片宽高度
             var photoWidth = photoImage.width;
-            // 获取图片高度
             var photoHeight = photoImage.height;
 
             // 如果缩放选择为 2，则将图片宽高都乘以 2
@@ -354,7 +361,7 @@ function drawImage(preview) {
             // 将图片绘制到 canvas 上
             photoCtx.drawImage(photoImage, 0, 0, photoWidth, photoHeight);
 
-            // 设置字体样式
+            // 设置大字体样式
             photoCtx.font = `bold 120px ${fontList[parseInt($('#font-select').val())]}`;
             // 设置字体颜色为黑色
             photoCtx.fillStyle = !photoTheme ? 'white' : 'black';
@@ -368,16 +375,16 @@ function drawImage(preview) {
             photoCtx.fillText($('#lens-input').val(), photoWidth - specLength - 200, photoHeight + 282);
 
 
-            // 设置字体样式
+            // 设置小字体样式
             photoCtx.font = `normal 82px ${fontList[parseInt($('#font-select').val())]}`;
             // 设置 canvas 字符间距
             photoCanvas.style.letterSpacing = '1px';
             // 设置字体颜色
             photoCtx.fillStyle = '#727272';
             // 在 canvas 上绘制时间信息
-            photoCtx.fillText($('#time-input').val(), 200, photoHeight + 434);
+            photoCtx.fillText($('#time-input').val(), 200, photoHeight + 450);
             // 在 canvas 上绘制位置信息
-            photoCtx.fillText($('#location-input').val(), photoWidth - specLength - 200, photoHeight + 434);
+            photoCtx.fillText($('#location-input').val(), photoWidth - specLength - 200, photoHeight + 450);
             console.log("进入选择logo函数");
             // 如果选择了 logo
             if ($('#logo-select').val() != 'none') {
@@ -402,94 +409,11 @@ function drawImage(preview) {
                     photoCtx.lineWidth = 10;
                     photoCtx.strokeStyle = '#cccccc';
                     photoCtx.stroke();
-
-                    // 如果是预览模式
-                    if (preview) {
-                        // 获取图片质量
-                        var exportQuality = (Number($('#quality-slider input').val()) - 5) / 100; // 图片质量降低5%
-                        var previewQuality = exportQuality / 5;
-                        // 将 canvas 转换为 blob 对象
-                        photoCanvas.toBlob(canvasBlob => {
-                            // 设置 #photo-canvas-div 的样式
-                            $('#photo-canvas-div').css({
-                                'display': 'flex',
-                                'justify-content': 'center',
-                                'align-items': 'center'
-                            });
-
-                            if (photoCanvas.height > photoCanvas.width) {
-                                $('#photo-canvas-div').css({
-                                    'width': 'auto',
-                                    'height': '700px'
-                                });
-
-                                $('#photo-preview').attr('width', 'auto'); // 图片宽度占满容器
-                                $('#photo-preview').attr('height', '100%'); // 图片高度自动调整
-                            } else {
-                                $('#photo-canvas-div').css({
-                                    'width': '800px',
-                                    'height': 'auto'
-                                });
-                                $('#photo-preview').attr('width', '800px'); // 图片宽度自动调整
-                                $('#photo-preview').attr('height', 'auto'); // 图片高度占满容器
-                            }
-
-                            // 设置预览图的 src 属性
-                            $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob));
-                            $('#photo-area').addClass('mdui-hidden');
-                            $('#photo-container').removeClass('mdui-hidden');
-                            $('#photo-canvas-div').removeClass('mdui-hidden');
-                        }, 'image/jpeg', previewQuality);
-                    } else {
-                        // 保存图片
-                        saveImage();
-                    }
+                    handlePreview(preview)
+                    
                 }
-            } else {
-                // 如果没有选择 logo
-                if (preview) {
-                    // 获取图片质量
-                    var exportQuality = (Number($('#quality-slider input').val()) - 5) / 100; // 图片质量降低5%
-                    var previewQuality = exportQuality / 5;
-                    // 将 canvas 转换为 blob 对象
-                    photoCanvas.toBlob(canvasBlob => {
-
-                        // 设置 #photo-canvas-div 的样式
-                        $('#photo-canvas-div').css({
-                            'display': 'flex',
-                            'justify-content': 'center',
-                            'align-items': 'center'
-                        });
-
-                        if (photoCanvas.height > photoCanvas.width) {
-                            $('#photo-canvas-div').css({
-                                'width': 'auto',
-                                'height': '700px'
-                            });
-
-                            $('#photo-preview').attr('width', 'auto'); // 图片宽度占满容器
-                            $('#photo-preview').attr('height', '100%'); // 图片高度自动调整
-                        } else {
-                            $('#photo-canvas-div').css({
-                                'width': '800px',
-                                'height': 'auto'
-                            });
-                            $('#photo-preview').attr('width', '800px'); // 图片宽度自动调整
-                            $('#photo-preview').attr('height', 'auto'); // 图片高度占满容器
-                        }
-
-                        // 设置预览图的 src 属性
-                        $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob));
-                        console.log("canvasBlob", canvasBlob);
-                        $('#photo-area').addClass('mdui-hidden');
-                        $('#photo-container').removeClass('mdui-hidden');
-                        $('#photo-canvas-div').removeClass('mdui-hidden');
-                        console.log("previewQuality", previewQuality);
-                    }, 'image/jpeg', previewQuality);
-                } else {
-                    // 保存图片
-                    saveImage();
-                }
+            } else{
+                handlePreview(preview)
             }
         }
     };
@@ -498,7 +422,49 @@ function drawImage(preview) {
     reader.readAsDataURL(photoFile);
 }
 
+function handlePreview(preview){
+    // 如果是预览模式
+    if (preview) {
+        // 获取图片质量
+        var exportQuality = (Number($('#quality-slider input').val()) - 5) / 100; // 图片质量降低5%
+        var previewQuality = exportQuality / 5;
+        // 将 canvas 转换为 blob 对象
+        photoCanvas.toBlob(canvasBlob => {
+            // 设置 #photo-canvas-div 的样式
+            $('#photo-canvas-div').css({
+                'display': 'flex',
+                'justify-content': 'center',
+                'align-items': 'center'
+            });
 
+            if (photoCanvas.height > photoCanvas.width) {
+                $('#photo-canvas-div').css({
+                    'width': 'auto',
+                    'height': '700px'
+                });
+
+                $('#photo-preview').attr('width', 'auto'); // 图片宽度占满容器
+                $('#photo-preview').attr('height', '100%'); // 图片高度自动调整
+            } else {
+                $('#photo-canvas-div').css({
+                    'width': '800px',
+                    'height': 'auto'
+                });
+                $('#photo-preview').attr('width', '800px'); // 图片宽度自动调整
+                $('#photo-preview').attr('height', 'auto'); // 图片高度占满容器
+            }
+
+            // 设置预览图的 src 属性
+            $('#photo-preview').attr('src', URL.createObjectURL(canvasBlob));
+            $('#photo-area').addClass('mdui-hidden');
+            $('#photo-container').removeClass('mdui-hidden');
+            $('#photo-canvas-div').removeClass('mdui-hidden');
+        }, 'image/jpeg', previewQuality);
+    } else {
+        // 保存图片
+        saveImage();
+    }
+}
 
 function showModelEditor() {
     if ($('#device-input').val() == 'Unknown') {
