@@ -46,12 +46,13 @@
     src: url(./fonts/SF-Pro-Display-Medium.otf);
 }
 
+
 body {
     -webkit-user-select: none;
     user-select: none;
     font-family: MiSans;
     transition: background-color 0.2s ease;
-    background: linear-gradient(45deg, #ff0080, #ff8c00, #ffd700, #90ee90, #00ced1, #1e90ff,#c71585, #ff1493,#ffd700, #dc143c, #ffa07a);
+    background: linear-gradient(45deg, #ff0080, #ff8c00, #ffd700, #90ee90, #00ced1, #1e90ff, #c71585, #ff1493, #ffd700, #dc143c, #ffa07a);
     background-size: 2100% 2100%;
     /* 增加背景尺寸以允许更平滑的过渡 */
     animation: gradientAnimation 10s linear infinite;
@@ -260,17 +261,6 @@ div.aplayer-body {
     border: 1px solid #616161;
 }
 
-#map {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    background-color: lightgray;
-    padding: 10px;
-    text-align: center;
-
-}
 
 #theme-container button {
     margin: 0 10px;
