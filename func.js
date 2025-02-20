@@ -73,7 +73,7 @@ function chooseFile() {
         }
     }
 
-    readImage('testphoto-横');
+    // readImage('testphoto-横');
 }
 
 function readImage(file) {
@@ -109,6 +109,7 @@ function readImage(file) {
             // 显示图片文件名和宽高信息
             $('#photo-info').html(`${photoFile.name}<br />${photoImage.width}x${photoImage.height}`);
 
+            $('#zoom-tip').text('(' + photoImage.width * parseFloat($('#zoom-select').val()) + 'x' + photoImage.height*parseFloat($('#zoom-select').val()) + ')' );
             // 初始化设备、时间、镜头和位置信息为 Unknown
             $('#device-input').val('Unknown');
             $('#time-input').val('Unknown');
@@ -343,7 +344,8 @@ function drawImage(preview) {
             var photoHeight = photoImage.height;
 
             // 如果缩放选择为 2，则将图片宽高都乘以 2
-            var zoom = parseInt($('#zoom-select').val());
+            var zoom = parseFloat($('#zoom-select').val());
+            console.log(zoom);
             if (zoom != 1) {
                 photoWidth = photoWidth * zoom;
                 photoHeight = photoHeight * zoom;
@@ -385,7 +387,6 @@ function drawImage(preview) {
             photoCtx.fillText($('#time-input').val(), 200, photoHeight + 450);
             // 在 canvas 上绘制位置信息
             photoCtx.fillText($('#location-input').val(), photoWidth - specLength - 200, photoHeight + 450);
-            console.log("进入选择logo函数");
             // 如果选择了 logo
             if ($('#logo-select').val() != 'none') {
                 // 创建 logo Image 对象
@@ -646,6 +647,12 @@ $('#logo-select').on('change', () => {
 });
 
 $('#zoom-select').on('change', () => {
+    console.log("zoom-select changed", parseFloat($('#zoom-select').val()));
+    if ($('#zoom-tip').text() != ''){
+        width = $('#zoom-tip').text().replace('(','').replace(')','').split('x')[0];
+        height = $('#zoom-tip').text().replace('(','').replace(')','').split('x')[1];
+        $('#zoom-tip').text('(' + width * parseFloat($('#zoom-select').val()) + 'x' + height * parseFloat($('#zoom-select').val()) + ')');
+    }
     drawImage(true);
 });
 
