@@ -260,6 +260,18 @@ div.aplayer-body {
     border: 1px solid #616161;
 }
 
+#map {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    background-color: lightgray;
+    padding: 10px;
+    text-align: center;
+
+}
+
 #theme-container button {
     margin: 0 10px;
 }
