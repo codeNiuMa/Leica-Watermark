@@ -1,19 +1,17 @@
 # Photomark
 照片添加徕卡相框（索尼、尼康、佳能、一加。。。。。。。）工具，[GitHub pages在线使用](https://codeniuma.github.io/Leica-Watermark/)
+![PixPin_2025-02-21_00-31-08](https://github.com/user-attachments/assets/3383a9a8-5530-44d9-9f10-881f18867410)
+
 
 ## Features
 * 各品牌logo & 多种字体
 * 本地静态网页执行
-* 深色/浅色模式切换&纯色/渐变背景切换
-![PixPin_2025-01-14_23-56-49](https://github.com/user-attachments/assets/921984d6-dbca-4958-9e18-1c2d2ca71b02)
+* 夜间模式切换
+* 纯色/渐变/图片背景切换
+![PixPin_2025-02-21_00-34-42](https://github.com/user-attachments/assets/a76d0abd-1a92-4e02-96c0-2d55e9eb69ff)
 
 
-
-## Known bugs
-* Northeast hemisphere positioning support only
-* Maximum 5MB limit in Safari
-
-## Preview
+## 使用步骤
 ![preview](./67854aebdd8dd_67854aebe794b.gif)
 
 ## Version
@@ -37,6 +35,13 @@
 1. 优化经纬度显示格式
 2. 优化了部分参数的准确性
 3. 优化了代码实现
+### 25.02.21
+1. parseInt ==> parseFloat, 修复了图片缩放bug
+2. 添加了缩放图片尺寸提示
+![PixPin_2025-02-21_00-27-31](https://github.com/user-attachments/assets/89d51f19-633a-4a4c-b96e-c17b83493f4d)
+3. 添加了tag的徕卡logo
+
+
 
 
 
