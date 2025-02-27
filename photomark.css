@@ -78,12 +78,12 @@ body.mdui-theme-layout-dark.animation-off {
 }
 
 body.background-image {
-    background: url("https://unsplash.it/1920/1080?random") no-repeat center center fixed;
+    /* background: url("https://unsplash.it/1920/1080?random") no-repeat center center fixed; */
     background-size: cover;
 }
 
 body.mdui-theme-layout-dark.background-image {
-    background: url("https://unsplash.it/1920/1080?random") no-repeat center center fixed;
+    /* background: url("https://unsplash.it/1920/1080?random") no-repeat center center fixed; */
     background-size: cover;
 }
 
@@ -263,5 +263,26 @@ div.aplayer-body {
 
 
 #theme-container button {
+    margin: 0 10px;
+}
+
+
+#frame-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px;
+    overflow: hidden;
+    padding: 10px;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    background: rgba(201, 201, 201, 0.3);
+    border: 1px solid #616161;
+}
+
+#frame {
     margin: 0 10px;
 }

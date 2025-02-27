@@ -109,7 +109,7 @@ function readImage(file) {
             // 显示图片文件名和宽高信息
             $('#photo-info').html(`${photoFile.name}<br />${photoImage.width}x${photoImage.height}`);
 
-            $('#zoom-tip').text('(' + photoImage.width * parseFloat($('#zoom-select').val()) + 'x' + photoImage.height*parseFloat($('#zoom-select').val()) + ')' );
+            $('#zoom-tip').text('(' + photoImage.width * parseFloat($('#zoom-select').val()) + 'x' + photoImage.height * parseFloat($('#zoom-select').val()) + ')');
             // 初始化设备、时间、镜头和位置信息为 Unknown
             $('#device-input').val('Unknown');
             $('#time-input').val('Unknown');
@@ -118,7 +118,7 @@ function readImage(file) {
 
             // 使用 exifr 解析图片 EXIF 信息
             exifr.parse(e.target.result).then(res => {
-                console.log("图片 EXIF 信息: ",res);
+                console.log("图片 EXIF 信息: ", res);
                 // 将 EXIF 信息保存到 photoExif 变量
                 photoExif = res;
                 // 如果 EXIF 中有 Model 信息，则显示设备型号
@@ -140,7 +140,7 @@ function readImage(file) {
                 //if (res.FocalLength && res.FNumber && res.ExposureTime && res.ISO) $('#lens-input').val(`${parseInt(res.FocalLength)}mm f/${res.FNumber.toFixed(1)} 1/${parseInt(res.ExposureTime ** -1)} ISO${res.ISO}`);
                 // 如果 EXIF 中有 GPS 信息，则显示拍摄位置
                 getGPS(res);
-                
+
                 mdui.mutation();
 
                 // 启用设备、时间、镜头和位置输入框
@@ -158,7 +158,9 @@ function readImage(file) {
                 $('#location-input').parent('.mdui-textfield').addClass('mdui-textfield-not-empty');
             });
             // 隐藏照片选择区域，显示 canvas 区域
-            console.log("drawImage(true)");
+            console.log("隐藏照片选择区域，显示 canvas 区域");
+            $('#frame-type').removeClass('mdui-hidden');
+
             // 绘制图片到 canvas
             drawImage(true);
 
@@ -182,7 +184,7 @@ function readImage(file) {
     $('#save-btn').text(getI18n('save'));
 }
 
-function getGPS(res){
+function getGPS(res) {
     if (res.GPSLatitude && res.GPSLatitudeRef && res.GPSLongitude && res.GPSLongitudeRef) {
         let latitude = res.GPSLatitude[0] + res.GPSLatitude[1] / 60 + res.GPSLatitude[2] / 3600;
         let longitude = res.GPSLongitude[0] + res.GPSLongitude[1] / 60 + res.GPSLongitude[2] / 3600;
@@ -350,72 +352,134 @@ function drawImage(preview) {
                 photoWidth = photoWidth * zoom;
                 photoHeight = photoHeight * zoom;
             }
+            var frameType = $('#framevalue').val();
+            // 预留相框类型
+            if (frameType == 1) {
+                // 设置 canvas 宽度
+                photoCanvas.width = photoWidth;
+                // 设置 canvas 高度，增加 614 用于显示文字信息
+                photoCanvas.height = photoHeight + 614;
 
-            // 设置 canvas 宽度
-            photoCanvas.width = photoWidth;
-            // 设置 canvas 高度，增加 614 用于显示文字信息
-            photoCanvas.height = photoHeight + 614;
+                // 设置 canvas 背景色为白色
+                photoCtx.fillStyle = photoTheme ? 'white' : 'black';
+                // 填充 canvas 背景
+                photoCtx.fillRect(0, 0, photoCanvas.width, photoCanvas.height);
+                // 将图片绘制到 canvas 上
+                photoCtx.drawImage(photoImage, 0, 0, photoWidth, photoHeight);
 
-            // 设置 canvas 背景色为白色
-            photoCtx.fillStyle = photoTheme ? 'white' : 'black';
-            // 填充 canvas 背景
-            photoCtx.fillRect(0, 0, photoCanvas.width, photoCanvas.height);
-            // 将图片绘制到 canvas 上
-            photoCtx.drawImage(photoImage, 0, 0, photoWidth, photoHeight);
+                // 设置大字体样式
+                photoCtx.font = `bold 120px ${fontList[parseInt($('#font-select').val())]}`;
+                // 设置字体颜色为黑色
+                photoCtx.fillStyle = !photoTheme ? 'white' : 'black';
 
-            // 设置大字体样式
-            photoCtx.font = `bold 120px ${fontList[parseInt($('#font-select').val())]}`;
-            // 设置字体颜色为黑色
-            photoCtx.fillStyle = !photoTheme ? 'white' : 'black';
+                // 获取镜头信息文本的宽度
+                var specLength = photoCtx.measureText($('#lens-input').val()).width;
 
-            // 获取镜头信息文本的宽度
-            var specLength = photoCtx.measureText($('#lens-input').val()).width;
+                // 在 canvas 上绘制相机名称信息，200是左边距
+                photoCtx.fillText($('#device-input').val(), 200, photoHeight + 282);
+                // 在 canvas 上绘制镜头信息，200是右边距
+                photoCtx.fillText($('#lens-input').val(), photoWidth - specLength - 200, photoHeight + 282);
 
-            // 在 canvas 上绘制相机名称信息，200是左边距
-            photoCtx.fillText($('#device-input').val(), 200, photoHeight + 282);
-            // 在 canvas 上绘制镜头信息，200是右边距
-            photoCtx.fillText($('#lens-input').val(), photoWidth - specLength - 200, photoHeight + 282);
+                // 画文字时，原点在文字的左下点，图是左上
+                // 设置小字体样式
+                photoCtx.font = `normal 82px ${fontList[parseInt($('#font-select').val())]}`;
+                // 设置 canvas 字符间距
+                photoCanvas.style.letterSpacing = '1px';
+                // 设置字体颜色
+                photoCtx.fillStyle = '#727272';
+                // 在 canvas 上绘制时间信息
+                photoCtx.fillText($('#time-input').val(), 200, photoHeight + 450);
+                // 在 canvas 上绘制位置信息
+                photoCtx.fillText($('#location-input').val(), photoWidth - specLength - 200, photoHeight + 450);
+                // 如果选择了 logo
+                if ($('#logo-select').val() != 'none') {
+                    // 创建 logo Image 对象
+                    var logoImage = new Image();
+                    // 设置 logo Image 对象的 src 属性
+                    logoImage.src = logoList[$('#logo-select').val()];
+                    console.log("logoImage.src", $('#logo-select').val());
+                    // 当 logo Image 对象加载完成时
+                    logoImage.onload = () => {
+                        var logoHeight = 250;
+                        var pianyi = 30;
+                        if ($('#logo-select').val().includes('sony') || $('#logo-select').val().includes('canon') || $('#logo-select').val().includes('fujifilm')) {
+                            pianyi = 200;
+                        }
+                        // 将 logo 绘制到 canvas 上
+                        photoCtx.drawImage(logoImage, photoWidth - specLength - 600 - pianyi, photoHeight + 180 - (pianyi / 2), logoHeight + pianyi, logoHeight + pianyi);
 
-
-            // 设置小字体样式
-            photoCtx.font = `normal 82px ${fontList[parseInt($('#font-select').val())]}`;
-            // 设置 canvas 字符间距
-            photoCanvas.style.letterSpacing = '1px';
-            // 设置字体颜色
-            photoCtx.fillStyle = '#727272';
-            // 在 canvas 上绘制时间信息
-            photoCtx.fillText($('#time-input').val(), 200, photoHeight + 450);
-            // 在 canvas 上绘制位置信息
-            photoCtx.fillText($('#location-input').val(), photoWidth - specLength - 200, photoHeight + 450);
-            // 如果选择了 logo
-            if ($('#logo-select').val() != 'none') {
-                // 创建 logo Image 对象
-                var logoImage = new Image();
-                // 设置 logo Image 对象的 src 属性
-                logoImage.src = logoList[$('#logo-select').val()];
-                console.log("logoImage.src", $('#logo-select').val());
-                // 当 logo Image 对象加载完成时
-                logoImage.onload = () => {
-                    var logoHeight = 250;
-                    var pianyi = 30;
-                    if ($('#logo-select').val().includes('sony') || $('#logo-select').val().includes('canon') || $('#logo-select').val().includes('fujifilm')) {
-                        pianyi = 200;
+                        // 绘制 logo 分割线
+                        photoCtx.moveTo(photoWidth - specLength - 280, photoHeight + 190);
+                        photoCtx.lineTo(photoWidth - specLength - 280, photoHeight + 190 + logoHeight);
+                        photoCtx.lineWidth = 10;
+                        photoCtx.strokeStyle = '#cccccc';
+                        photoCtx.stroke();
+                        handlePreview(preview)
                     }
-                    // 将 logo 绘制到 canvas 上
-                    photoCtx.drawImage(logoImage, photoWidth - specLength - 600 - pianyi, photoHeight + 180 - (pianyi / 2), logoHeight + pianyi, logoHeight + pianyi);
-
-                    // 绘制 logo 分割线
-                    photoCtx.moveTo(photoWidth - specLength - 280, photoHeight + 190);
-                    photoCtx.lineTo(photoWidth - specLength - 280, photoHeight + 190 + logoHeight);
-                    photoCtx.lineWidth = 10;
-                    photoCtx.strokeStyle = '#cccccc';
-                    photoCtx.stroke();
+                } else {
                     handlePreview(preview)
-                    
                 }
-            } else{
-                handlePreview(preview)
+            }else{
+                photoCanvas.width = 200+photoWidth+200;
+                photoCanvas.height = 200+photoHeight+614+200;
+
+                photoCtx.fillStyle = photoTheme ? 'white' : 'black';
+                photoCtx.fillRect(0, 0, photoCanvas.width, photoCanvas.height);
+                photoCtx.drawImage(photoImage, 200, 200, photoWidth, photoHeight);
+                // ctx.font = "font-style font-variant font-weight font-size font-family";
+                photoCtx.font = `bold 120px ${fontList[parseInt($('#font-select').val())]}`;
+                photoCtx.fillStyle = !photoTheme ? 'white' : 'black';
+                var deviceLength = photoCtx.measureText($('#device-input').val()).width;
+                photoCtx.fillText($('#device-input').val(), (photoWidth + 400 - deviceLength) / 2, photoHeight + 200+(814/2-50));
+
+                photoCtx.font = `normal lighter 82px ${fontList[parseInt($('#font-select').val())]}`;
+                photoCtx.fillStyle = '#727272';
+                lensInfo = $('#lens-input').val();
+                lensInfo = lensInfo.replaceAll(" ", '  |  ');
+                var specLength = photoCtx.measureText(lensInfo).width;
+                photoCtx.fillText(lensInfo, (photoWidth + 400 - specLength) / 2, photoHeight + 200 + (814 / 2 + 150));
+
+                // 如果选择了 logo
+                if ($('#logo-select').val() != 'none') {
+                    // 创建 logo Image 对象
+                    var logoImage = new Image();
+                    // 设置 logo Image 对象的 src 属性
+                    logoImage.src = logoList[$('#logo-select').val()];
+                    console.log("logoImage.src", $('#logo-select').val());
+                    // 当 logo Image 对象加载完成时
+                    logoImage.onload = () => {
+                        var logoHeight = 150;
+                        var pianyi = 30;
+                        // 把这几个logo都放大
+                        if ($('#logo-select').val().includes('sony') || $('#logo-select').val().includes('canon') || $('#logo-select').val().includes('fujifilm')) {
+                            pianyi = 200;
+                        }
+
+                        // 先把这画成白的
+                        photoCtx.fillStyle = photoTheme ? 'white' : 'black';
+                        photoCtx.fillRect(200, photoHeight + 200, photoWidth, 614+200);
+                        console.log("画成白的")
+                        // 再次画字，先画镜头信息
+                        photoCtx.fillStyle = '#727272';
+                        photoCtx.fillText(lensInfo, (photoWidth + 400 - specLength) / 2, photoHeight + 200 + (814 / 2 + 150));
+
+                        photoCtx.font = `normal 120px ${fontList[parseInt($('#font-select').val())]}`;
+                        photoCtx.fillStyle = !photoTheme ? 'white' : 'black';
+                        deviceLength = photoCtx.measureText($('#device-input').val() + " | ").width;
+                        photoCtx.fillText($('#device-input').val() + " | ", (photoWidth + 400 - deviceLength - (logoHeight + pianyi)) / 2, photoHeight + 200 + (814 / 2 - 50));
+
+
+                        // 将 logo 绘制到 canvas 上
+                        photoCtx.drawImage(logoImage, (photoWidth + 400 + deviceLength - (logoHeight + pianyi)) / 2, photoHeight + 200 + (814 / 2 - 50) - (logoHeight + pianyi + 120) / 2, logoHeight + pianyi, logoHeight + pianyi);
+                        handlePreview(preview)
+                    }
+                } else {
+                    handlePreview(preview)
+                }
+
+
             }
+
         }
     };
 
@@ -423,7 +487,7 @@ function drawImage(preview) {
     reader.readAsDataURL(photoFile);
 }
 
-function handlePreview(preview){
+function handlePreview(preview) {
     // 如果是预览模式
     if (preview) {
         // 获取图片质量
@@ -648,9 +712,9 @@ $('#logo-select').on('change', () => {
 
 $('#zoom-select').on('change', () => {
     console.log("zoom-select changed", parseFloat($('#zoom-select').val()));
-    if ($('#zoom-tip').text() != ''){
-        width = $('#zoom-tip').text().replace('(','').replace(')','').split('x')[0];
-        height = $('#zoom-tip').text().replace('(','').replace(')','').split('x')[1];
+    if ($('#zoom-tip').text() != '') {
+        width = $('#zoom-tip').text().replace('(', '').replace(')', '').split('x')[0];
+        height = $('#zoom-tip').text().replace('(', '').replace(')', '').split('x')[1];
         $('#zoom-tip').text('(' + width * parseFloat($('#zoom-select').val()) + 'x' + height * parseFloat($('#zoom-select').val()) + ')');
     }
     drawImage(true);
@@ -706,7 +770,7 @@ $('#photo-toggle').on('click', function () {
         $('#logo-select option[value="hasselblad"]').css('display', 'none');
         $('#logo-select option[value="fujifilm_dark"]').css('display', 'block');
         $('#logo-select option[value="fujifilm"]').css('display', 'none');
-        if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'hasselblad' || $('#logo-select').val() == 'fujifilm')  {
+        if ($('#logo-select').val() == 'sony' || $('#logo-select').val() == 'hasselblad' || $('#logo-select').val() == 'fujifilm') {
             $('#logo-select').val($('#logo-select').val() + '_dark');
         }
         console.log($('#logo-select').val());

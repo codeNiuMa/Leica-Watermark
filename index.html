@@ -64,8 +64,20 @@
 </head>
 
 <body>
+    <div id="frame-type" class="mdui-hidden">
+        <input id="framevalue" class="mdui-hidden" value="1" />
+        <!-- 主题切换 -->
+        <button id="frame" class="mdui-btn mdui-btn-icon mdui-ripple" value="1" onclick="changeFrame(this)">
+            1
+        </button>
+        <button id="frame" class="mdui-btn mdui-btn-icon mdui-ripple" value="2" onclick="changeFrame(this)">
+            2
+        </button>
+    </div>
     <div class="mdui-container">
+        <!-- 两列方块布局 -->
         <div id="main-flex" class="mdui-row-xs-1 mdui-row-sm-2">
+            <!-- 左侧照片容器 -->
             <div id="photo-col" class="mdui-col">
                 <!-- 照片上传前的容器 -->
                 <div id="photo-area" class="mdui-color-grey-200 mdui-ripple mdui-img-rounded mdui-valign"
@@ -97,6 +109,7 @@
                     </div>
                 </div>
             </div>
+            <!-- 右侧信息容器 -->
             <div id="info-col" class="mdui-col">
                 <div class="mdui-row-xs-2">
                     <div class="mdui-col">
@@ -263,6 +276,7 @@
         </div>
     </div>
 
+    <!-- 右下角主题胶囊 -->
     <div id="theme-container">
         <!-- 主题切换 -->
         <button id="theme-toggle" class="mdui-btn mdui-btn-icon mdui-ripple">
@@ -278,7 +292,7 @@
         </button>
     </div>
 
-
+    <!-- 听歌小组件 -->
     <meting-js class="meting" id="150127127" lrc-type="0" server="netease" order="random" type="album" list-olded="true"
         autoplay="false" fixed="true">
     </meting-js>
@@ -290,7 +304,13 @@
 
     <script src="./func.js"></script>
 
-
+    <script>
+        function changeFrame(button) {
+            var framevalue = document.getElementById('framevalue');
+            framevalue.value = button.value;
+            drawImage(1);
+        }
+    </script>
 
 
 </body>
