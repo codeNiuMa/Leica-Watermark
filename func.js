@@ -419,18 +419,24 @@ function drawImage(preview) {
                 } else {
                     handlePreview(preview)
                 }
-            }else{
-                photoCanvas.width = 200+photoWidth+200;
-                photoCanvas.height = 200+photoHeight+614+200;
+            } else if (frameType == 2) {
+                photoCanvas.width = 200 + photoWidth + 200;
+                photoCanvas.height = 200 + photoHeight + 614 + 200;
 
                 photoCtx.fillStyle = photoTheme ? 'white' : 'black';
                 photoCtx.fillRect(0, 0, photoCanvas.width, photoCanvas.height);
+                // 绘制阴影矩形
+                photoCtx.filter = 'blur(15px)';  // 设置模糊效果，可以调整数值
+                photoCtx.fillStyle = 'rgba(0, 0, 0, 0.5)';  // 黑色半透明阴影
+                photoCtx.fillRect(190, 190, photoWidth + 20, photoHeight + 20);
+                photoCtx.filter = 'none';  // 恢复默认滤镜设置
+
                 photoCtx.drawImage(photoImage, 200, 200, photoWidth, photoHeight);
                 // ctx.font = "font-style font-variant font-weight font-size font-family";
                 photoCtx.font = `bold 120px ${fontList[parseInt($('#font-select').val())]}`;
                 photoCtx.fillStyle = !photoTheme ? 'white' : 'black';
                 var deviceLength = photoCtx.measureText($('#device-input').val()).width;
-                photoCtx.fillText($('#device-input').val(), (photoWidth + 400 - deviceLength) / 2, photoHeight + 200+(814/2-50));
+                photoCtx.fillText($('#device-input').val(), (photoWidth + 400 - deviceLength) / 2, photoHeight + 200 + (814 / 2 - 50));
 
                 photoCtx.font = `normal lighter 82px ${fontList[parseInt($('#font-select').val())]}`;
                 photoCtx.fillStyle = '#727272';
@@ -457,7 +463,7 @@ function drawImage(preview) {
 
                         // 先把这画成白的
                         photoCtx.fillStyle = photoTheme ? 'white' : 'black';
-                        photoCtx.fillRect(200, photoHeight + 200, photoWidth, 614+200);
+                        photoCtx.fillRect(200, photoHeight + 200, photoWidth, 614 + 200);
                         console.log("画成白的")
                         // 再次画字，先画镜头信息
                         photoCtx.fillStyle = '#727272';
@@ -470,7 +476,7 @@ function drawImage(preview) {
 
 
                         // 将 logo 绘制到 canvas 上
-                        photoCtx.drawImage(logoImage, (photoWidth + 400 + deviceLength - (logoHeight + pianyi)) / 2, photoHeight + 200 + (814 / 2 - 50) - (logoHeight + pianyi + 120) / 2, logoHeight + pianyi, logoHeight + pianyi);
+                        photoCtx.drawImage(logoImage, (photoWidth + 400 + deviceLength - (logoHeight + pianyi)) / 2, photoHeight + 200 + (814 / 2 - 50) - (logoHeight + pianyi + 120) / 2 + 13, logoHeight + pianyi, logoHeight + pianyi);
                         handlePreview(preview)
                     }
                 } else {
@@ -478,6 +484,8 @@ function drawImage(preview) {
                 }
 
 
+            } else if (frameType == 3) {
+                console.log("frameType == 3")
             }
 
         }
