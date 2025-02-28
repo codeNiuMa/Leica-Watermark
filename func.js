@@ -463,7 +463,7 @@ function drawImage(preview) {
 
                         // 先把这画成白的
                         photoCtx.fillStyle = photoTheme ? 'white' : 'black';
-                        photoCtx.fillRect(200, photoHeight + 200, photoWidth, 614 + 200);
+                        photoCtx.fillRect(200, photoHeight + 250, photoWidth, 614 + 200);
                         console.log("画成白的")
                         // 再次画字，先画镜头信息
                         photoCtx.fillStyle = '#727272';
