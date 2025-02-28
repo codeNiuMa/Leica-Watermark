@@ -1,9 +1,11 @@
-![PixPin_2025-02-28_01-10-35](https://github.com/user-attachments/assets/925a6e11-43a9-4448-8603-4015affc0348)# 徕卡相框🖼
+# 徕卡相框🖼
 [GitHub pages在线使用](https://codeniuma.github.io/Leica-Watermark/)
+
 
 照片添加徕卡相框（索尼、尼康、佳能、一加……）工具
 
 ![PixPin_2025-02-21_00-31-08](https://github.com/user-attachments/assets/3383a9a8-5530-44d9-9f10-881f18867410)
+![PixPin_2025-02-28_11-21-33](https://github.com/user-attachments/assets/87eb1ae5-05cc-4677-b88d-47c26d80d63b)
 
 
 ## Features
@@ -45,9 +47,10 @@
 3. 添加了网页的徕卡logo
 
 ### 25.02.28
-1. 新相框类型
+1. 新相框类型，添加阴影效果
+2. 优化了sony的logo显示效果
 
-![PixPin_2025-02-28_01-13-08](https://github.com/user-attachments/assets/6500cbfd-be12-4920-ae7f-33e7b22f93bd)
+
 
 
 
